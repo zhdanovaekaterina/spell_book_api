@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      dockerfile: .docker/dev.dockerfile
+    image: zhdanovaekaterina/spell_book_api:dev
+    container_name: app
+    ports:
+      - '80:80'
+    env_file:
+      - .config/.env
+    links:
+      - db
+    depends_on:
+      test-app:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app/:/code/app:delegated
+      - ./migrations/:/code/migrations:delegated
+      - ./tests/:/code/tests:delegated
+
+  db:
+    image: postgres:12.12
+    container_name: db
+    volumes:
+      - ./.docker/volumes/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    depends_on:
+      test-app:
+        condition: service_completed_successfully
+    healthcheck:
+      test: pg_isready --dbname=$$POSTGRES_DB --host=127.0.0.1 --port=5432
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    env_file:
+      - .config/.env
+
+  test-app:
+    build:
+      dockerfile: .docker/test.dockerfile
+    image: zhdanovaekaterina/spell_book_api:test
+    container_name: test-app
+    env_file:
+      - .config/.env.test
+    volumes:
+      - ./app/:/code/app:delegated
+      - ./tests/:/code/tests:delegated
