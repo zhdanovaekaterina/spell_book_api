@@ -17,8 +17,6 @@ services:
         condition: service_healthy
     volumes:
       - ./app/:/code/app:delegated
-      - ./migrations/:/code/migrations:delegated
-      - ./tests/:/code/tests:delegated
 
   db:
     image: postgres:12.12

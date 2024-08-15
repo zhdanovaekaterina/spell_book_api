@@ -1,14 +1,14 @@
-FROM python:3.12-slim AS compile-image
+FROM python:3.11-slim AS compile-image
 
 WORKDIR /code
 
-COPY ./.docker/requirements.txt /tmp
+COPY ./.docker/dev-requirements.txt /tmp/requirements.txt
 
 RUN \
     pip install --upgrade pip && \
     pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r /tmp/requirements.txt
 
-FROM python:3.12-slim AS build-image
+FROM python:3.11-slim AS build-image
 
 RUN useradd --system zhdanova
 
@@ -24,4 +24,4 @@ COPY alembic.ini /code
 
 USER zhdanova
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uvicorn", "app.rest.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]

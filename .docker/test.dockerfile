@@ -1,14 +1,14 @@
-FROM python:3.12-slim AS compile-image
+FROM python:3.11-slim AS compile-image
 
 WORKDIR /code
 
-COPY ./.docker/requirements.txt /tmp
+COPY ./.docker/test-requirements.txt /tmp/requirements.txt
 
 RUN \
     pip install --upgrade pip && \
     pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r /tmp/requirements.txt
 
-FROM python:3.12-slim AS build-image
+FROM python:3.11-slim AS build-image
 
 RUN useradd --system zhdanova
 

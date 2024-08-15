@@ -24,7 +24,7 @@ docker compose up --build -d  # если есть образ, флаг --build �
 4. Выдаем права директории с миграциями
 
 ```shell
-sudo chmod -R 777 migrations/versions
+sudo chmod -R 777 app/repository/psql/migrations/versions
 ```
 
 5. Актуализируем базу
