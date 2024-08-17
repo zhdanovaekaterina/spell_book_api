@@ -9,6 +9,9 @@ class MockRepository(RepositoryInterface):
     Шлюз-заглушка для тестирования
     """
 
+    # эмуляция таблицы 'caster'
+    caster = []
+
     def get_all_classes(self, full: bool = False)\
             -> Union[List[GameClassInfo], List[str]]:
 
@@ -47,3 +50,32 @@ class MockRepository(RepositoryInterface):
             })
         else:
             raise KeyError()
+
+    def save_caster(self, data) -> int:
+        data.id = len(self.caster) + 1
+        self.caster.append(data)
+        return data.id
+
+    def get_caster(self, caster_id: int):
+
+        index = None
+        for num, caster in enumerate(self.caster):
+            if caster.id == caster_id:
+                index = num
+
+        if index is not None:
+            return self.caster[index]
+        else:
+            raise KeyError
+
+    def delete_caster(self, caster_id: int) -> None:
+
+        index = None
+        for num, caster in enumerate(self.caster):
+            if caster.id == caster_id:
+                index = num
+
+        if index is not None:
+            self.caster.pop(index)
+        else:
+            raise KeyError

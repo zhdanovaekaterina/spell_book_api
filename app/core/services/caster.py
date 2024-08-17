@@ -1,4 +1,5 @@
 from app.core.base.service import Service
+from app.core.models.caster import Caster
 
 
 class CasterService(Service):
@@ -6,26 +7,33 @@ class CasterService(Service):
     Служба для работы с заклинателями
     """
 
-    def create(self):
+    def create(self, **data: dict) -> int:
         """
         Создание нового персонажа
-        :return:
+        :return: id персонажа
         """
-        pass
 
-    def get(self):
+        caster = Caster(**data)
+        return self.repository.save_caster(caster)
+
+    def get(self, caster_id: int) -> dict:
         """
         Получение информации о персонаже по его id
-        :return:
+        :return: словарь с данными персонажа
+        :raise: KeyError - если персонаж не найден по id
         """
-        pass
 
-    def delete(self):
+        caster = self.repository.get_caster(caster_id)
+        return caster.model_dump()
+
+    def delete(self, caster_id: int) -> None:
         """
-        Удаление персонажа
+        Удаление персонажа по его id
         :return:
+        :raise: KeyError - если персонаж не найден по id
         """
-        pass
+
+        self.repository.delete_caster(caster_id)
 
     def level_up(self):
         """

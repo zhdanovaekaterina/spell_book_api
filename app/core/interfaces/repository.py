@@ -26,3 +26,32 @@ class RepositoryInterface(ABC):
         :return: GameClassInfo
         :raise: KeyError - если класс не найден
         """
+
+    @abstractmethod
+    # todo: указать тип Caster у даты и разобраться с циклическими импортами
+    def save_caster(self, data) -> int:
+        """
+        Сохранение персонажа
+        При сохранении присваивает модели id
+        :param data: модель персонажа
+        :return: id заклинателя
+        """
+
+    @abstractmethod
+    # todo: указать тип Caster у возвращаемого значения
+    def get_caster(self, caster_id: int):
+        """
+        Получение персонажа по id
+        :param caster_id:
+        :return:
+        :raise: KeyError - если персонаж не найден по id
+        """
+
+    @abstractmethod
+    def delete_caster(self, caster_id: int) -> bool:
+        """
+        Удаление персонажа по id
+        :param caster_id:
+        :return:
+        :raise: KeyError - если персонаж не найден по id
+        """
