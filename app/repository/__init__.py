@@ -1,1 +1,1 @@
-from app.repository.psql.repository import PsqlRepository
+from app.repository.db.repository import DbRepository
