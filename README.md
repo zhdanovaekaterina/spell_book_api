@@ -53,3 +53,15 @@ docker compose run --rm test-app
 ```
 
 Также настроен запуск тестов по коммиту - при падении тестов, коммит не зафиксируется.
+
+## Миграции
+
+Генерация новой миграции проводится через контейнер app
+```shell
+docker compose run app alembic revision --autogenerate -m 'migration_name'
+```
+
+После генерации файл необходимо добавить под git
+```shell
+git add app/repository/db/migrations/versions
+```

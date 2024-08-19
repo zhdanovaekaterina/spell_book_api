@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
@@ -12,27 +12,20 @@ class MockRepository(RepositoryInterface):
     # эмуляция таблицы 'caster'
     caster = []
 
-    def get_all_classes(self, full: bool = False)\
-            -> Union[List[GameClassInfo], List[str]]:
+    def get_all_classes(self) -> List[GameClassInfo]:
 
-        if full:
-
-            return [
-                GameClassInfo(**{
-                    'alias': 'wizard',
-                    'subclasses': ['transmutation', 'evocation'],
-                    'choose_subclass_level': 3
-                }),
-                GameClassInfo(**{
-                    'alias': 'cleric',
-                    'subclasses': ['life', 'peace', 'light'],
-                    'choose_subclass_level': 1
-                })
-            ]
-
-        else:
-
-            return ['wizard', 'cleric']
+        return [
+            GameClassInfo(**{
+                'alias': 'wizard',
+                'subclasses': ['transmutation', 'evocation'],
+                'choose_subclass_level': 2
+            }),
+            GameClassInfo(**{
+                'alias': 'cleric',
+                'subclasses': ['life', 'peace', 'light'],
+                'choose_subclass_level': 1
+            })
+        ]
 
     def get_one_class(self, alias: str) -> GameClassInfo:
 

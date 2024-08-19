@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
+from typing import List
 
 from app.core.interfaces.dto import GameClassInfo
 
@@ -10,12 +10,12 @@ class RepositoryInterface(ABC):
     """
 
     @abstractmethod
-    def get_all_classes(self, full: bool = False)\
-            -> Union[List[GameClassInfo], List[str]]:
+    def get_all_classes(self) -> List[GameClassInfo]:
         """
         Получение списка классов
+        # todo: пока что особо нигде не используется, возможно не нужен
         :param: full - флаг если нужно возвращать всю информацию
-        :return: Union[List[GameClassInfo], List[str]]
+        :return: List[GameClassInfo]
         """
 
     @abstractmethod
