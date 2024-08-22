@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import event
 
 from app.di import Container
 from app.repository.db.models import Base, GameClass, GameSubclass
@@ -18,8 +19,18 @@ def clean_db():
             'registry': Base
         }
     })
+    container.wire(modules=[
+        'app.core.models.game_class'
+    ])
 
     db = container.repository()
+
+    @event.listens_for(db.engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
+
     db.registry.metadata.create_all(db.engine)  # Создание таблиц
 
     return db

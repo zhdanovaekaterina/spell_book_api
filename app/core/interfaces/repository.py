@@ -29,10 +29,9 @@ class RepositoryInterface(ABC):
 
     @abstractmethod
     # todo: указать тип Caster у даты и разобраться с циклическими импортами
-    def save_caster(self, data) -> int:
+    def add_caster(self, data) -> int:
         """
-        Сохранение персонажа
-        При сохранении присваивает модели id
+        Добавление нового персонажа
         :param data: модель персонажа
         :return: id заклинателя
         """

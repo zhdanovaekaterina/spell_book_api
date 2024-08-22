@@ -44,7 +44,7 @@ class MockRepository(RepositoryInterface):
         else:
             raise KeyError()
 
-    def save_caster(self, data) -> int:
+    def add_caster(self, data) -> int:
         data.id = len(self.caster) + 1
         self.caster.append(data)
         return data.id

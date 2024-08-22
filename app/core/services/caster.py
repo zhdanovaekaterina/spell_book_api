@@ -14,7 +14,7 @@ class CasterService(Service):
         """
 
         caster = Caster(**data)
-        return self.repository.save_caster(caster)
+        return self.repository.add_caster(caster)
 
     def get(self, caster_id: int) -> dict:
         """
