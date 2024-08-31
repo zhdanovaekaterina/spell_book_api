@@ -1,8 +1,6 @@
 import pytest
 
-from app.core.models.caster import Caster
-from tests.services.fixtures import caster_service
-
+from app.core import CasterModel
 
 dict_caster = [({
     'name': 'Player1',
@@ -17,6 +15,7 @@ dict_caster = [({
 })]
 
 
+# todo: зависит от тестов модели заклинателя
 @pytest.mark.dependency(name="create")
 @pytest.mark.parametrize("data", dict_caster)
 def test_create(caster_service, data):
@@ -29,7 +28,7 @@ def test_create(caster_service, data):
 
     # проверим что он есть в репозитории
     caster_from_repo = repo.caster[0]
-    assert type(caster_from_repo) is Caster
+    assert type(caster_from_repo) is CasterModel
     assert caster_from_repo.id == caster_id
 
     # создадим еще одного
@@ -59,6 +58,7 @@ def test_get_existing(caster_service, data):
     # получим второго персонажа
     caster = caster_service.get(2)
     assert type(caster) is dict
+    assert caster.get('id') == 2
     assert len(repo.caster) == len_before
 
     assert (caster.get('stats').get('intelligence')

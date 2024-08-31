@@ -3,7 +3,6 @@ import pytest
 from pydantic import ValidationError
 
 from app.core.models.caster import Caster
-from tests.models.fixtures import di
 
 
 params_new_caster_valid = [

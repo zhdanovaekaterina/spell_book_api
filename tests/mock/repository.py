@@ -12,6 +12,9 @@ class MockRepository(RepositoryInterface):
     # эмуляция таблицы 'caster'
     caster = []
 
+    def __init__(self):
+        self.caster = []
+
     def get_all_classes(self) -> List[GameClassInfo]:
 
         return [

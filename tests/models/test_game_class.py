@@ -3,7 +3,6 @@ import pytest
 from pydantic import ValidationError
 
 from app.core.models.game_class import GameClass
-from tests.models.fixtures import di
 
 
 params_class_valid = [
