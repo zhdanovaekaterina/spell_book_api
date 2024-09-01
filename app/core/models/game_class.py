@@ -1,8 +1,10 @@
 from typing import Optional
 
 from pydantic import BaseModel, Field, model_validator
+from pydantic_core import PydanticCustomError
 from dependency_injector.wiring import inject, Provide
 
+from app.core.base.exc_type import CoreExcType
 from app.core.interfaces.repository import RepositoryInterface
 
 
@@ -25,8 +27,10 @@ class GameClass(BaseModel):
         try:
             game_class = repo.get_one_class(self.alias)
         except KeyError:
-            raise ValueError(
-                f'invalid class \'{self.alias}\' provided'
+            raise PydanticCustomError(
+                CoreExcType.INVALID_CLASS.value,
+                "invalid class '{class}' provided",
+                {'class': self.alias}
             )
 
         # Проверяем необходимость наличия подкласса
@@ -35,16 +39,19 @@ class GameClass(BaseModel):
             return self
 
         elif self.subclass is None:  # должен быть, но его нет
-            raise ValueError(
-                f'class \'{self.alias}\' on level \'{self.level}\''
-                f'must have a subclass'
+            raise PydanticCustomError(
+                CoreExcType.MISSING_SUBCLASS.value,
+                "class '{class}' on level {level} must have a subclass",
+                {'class': self.alias, 'level': self.level}
             )
 
         else:  # должен быть и он есть
             # Проверяем валидный подкласс для класса
             if self.subclass not in game_class.subclasses:
-                raise ValueError(
-                    f'invalid subclass provided for a class \'{self.alias}\''
+                raise PydanticCustomError(
+                    CoreExcType.INVALID_SUBCLASS.value,
+                    "invalid subclass provided for a class {class}",
+                    {'class': self.alias}
                 )
 
             return self

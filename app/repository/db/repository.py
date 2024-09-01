@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 
+from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
 from app.core.interfaces.dto import GameClassInfo
 from app.core.interfaces.repository import RepositoryInterface
@@ -63,7 +64,7 @@ class DbRepository(RepositoryInterface):
                     .where(DbCaster.id == caster_id)\
                     .one()
             except NoResultFound:
-                raise KeyError
+                raise NotFoundException
 
             return self._parse_in_to_model(data)
 
@@ -75,7 +76,7 @@ class DbRepository(RepositoryInterface):
                     .delete()
 
         if not deleted_rows:
-            raise KeyError
+            raise NotFoundException
 
         return True
 

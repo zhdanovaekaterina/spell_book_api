@@ -6,6 +6,7 @@
 
 import pytest
 
+from app.core import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
 from app.core.interfaces.dto import GameClassInfo
 from app.repository.db.models import Caster as DbCaster, CasterClass as DbCasterClass
@@ -77,14 +78,14 @@ def test_get_caster(full_db):
 
 @pytest.mark.dependency(name="get_caster_non_exist", depends=["save_caster"])
 def test_get_caster_non_exist(full_db):
-    with pytest.raises(KeyError):
+    with pytest.raises(NotFoundException):
         full_db.get_caster(2)  # act - пытаемся получить несуществующую запись
 
 
 @pytest.mark.dependency(depends=["save_caster", "get_caster_non_exist"])
 def test_delete_caster(full_db):
     full_db.delete_caster(1)  # act
-    with pytest.raises(KeyError):
+    with pytest.raises(NotFoundException):
         full_db.get_caster(1)  # если удаление успешно, получение выкинет ошибку
 
     with full_db.session:  # убедимся что связанная таблица также очищена
@@ -93,5 +94,5 @@ def test_delete_caster(full_db):
 
 
 def test_delete_caster_non_exist(full_db):
-    with pytest.raises(KeyError):
+    with pytest.raises(NotFoundException):
         full_db.delete_caster(2)  # act - пытаемся удалить несуществующую запись

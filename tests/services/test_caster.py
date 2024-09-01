@@ -1,6 +1,6 @@
 import pytest
 
-from app.core import CasterModel
+from app.core import CasterModel, NotFoundException
 
 dict_caster = [({
     'name': 'Player1',
@@ -39,13 +39,13 @@ def test_create(caster_service, data):
 
 @pytest.mark.dependency(depends=["create"])
 def test_get_wrong(caster_service):
-    with pytest.raises(KeyError):
+    with pytest.raises(NotFoundException):
         caster_service.get(3)
 
 
 @pytest.mark.dependency(depends=["create"])
 def test_delete_wrong(caster_service):
-    with pytest.raises(KeyError):
+    with pytest.raises(NotFoundException):
         caster_service.delete(3)
 
 

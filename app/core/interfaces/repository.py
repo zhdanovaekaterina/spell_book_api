@@ -43,7 +43,7 @@ class RepositoryInterface(ABC):
         Получение персонажа по id
         :param caster_id:
         :return:
-        :raise: KeyError - если персонаж не найден по id
+        :raise: NotFoundException - если персонаж не найден по id
         """
 
     @abstractmethod
@@ -52,5 +52,5 @@ class RepositoryInterface(ABC):
         Удаление персонажа по id
         :param caster_id:
         :return:
-        :raise: KeyError - если персонаж не найден по id
+        :raise: NotFoundException - если персонаж не найден по id
         """

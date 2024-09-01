@@ -1,5 +1,6 @@
 from typing import List
 
+from app.core import NotFoundException
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
 
@@ -62,7 +63,7 @@ class MockRepository(RepositoryInterface):
         if index is not None:
             return self.caster[index]
         else:
-            raise KeyError
+            raise NotFoundException
 
     def delete_caster(self, caster_id: int) -> None:
 
@@ -74,4 +75,4 @@ class MockRepository(RepositoryInterface):
         if index is not None:
             self.caster.pop(index)
         else:
-            raise KeyError
+            raise NotFoundException
