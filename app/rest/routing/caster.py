@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from dependency_injector.wiring import inject, Provide
 
 from app.core import CasterService, NotFoundException
-from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto
+from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
 
 
 router = APIRouter(prefix='/caster')
@@ -22,9 +22,9 @@ router = APIRouter(prefix='/caster')
 )
 @inject
 def create_caster(
-        caster: CasterCreateInDto,
-        service: CasterService = Depends(Provide['caster_service']),
-    ):
+    caster: CasterCreateInDto,
+    service: CasterService = Depends(Provide['caster_service']),
+):
 
     # маппинг
     data = {
@@ -69,13 +69,39 @@ def create_caster(
 )
 @inject
 def get_caster(
-        caster_id: int,
-        service: CasterService = Depends(Provide['caster_service']),
-    ):
+    caster_id: int,
+    service: CasterService = Depends(Provide['caster_service']),
+):
 
     try:
         caster = service.get(caster_id)
         return CasterDto(**caster)
+
+    except NotFoundException as err:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={'detail': [err.error()]}
+        )
+
+
+@router.delete(
+    '/{caster_id}',
+    status_code=status.HTTP_200_OK,
+    response_model=OkDto,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            'model': ExcDto
+        },
+    }
+)
+@inject
+def delete_caster(
+    caster_id: int,
+    service: CasterService = Depends(Provide['caster_service']),
+):
+    try:
+        service.delete(caster_id)
+        return OkDto()
 
     except NotFoundException as err:
         return JSONResponse(

@@ -80,7 +80,6 @@ class DbRepository(RepositoryInterface):
 
         return True
 
-
     @staticmethod
     def _parse_class_to_out(data) -> GameClassInfo:
         """

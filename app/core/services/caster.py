@@ -20,7 +20,7 @@ class CasterService(Service):
         """
         Получение информации о персонаже по его id
         :return: словарь с данными персонажа
-        :raise: KeyError - если персонаж не найден по id
+        :raise: NotFoundException - если персонаж не найден по id
         """
 
         caster = self.repository.get_caster(caster_id)
@@ -30,7 +30,7 @@ class CasterService(Service):
         """
         Удаление персонажа по его id
         :return:
-        :raise: KeyError - если персонаж не найден по id
+        :raise: NotFoundException - если персонаж не найден по id
         """
 
         self.repository.delete_caster(caster_id)

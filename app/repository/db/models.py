@@ -50,7 +50,7 @@ class Caster(Base, Prettify):
 
     caster_class = relationship('CasterClass',
                                 back_populates='caster',
-                                cascade='save-update, merge, delete',
+                                cascade='all,delete',
                                 passive_deletes=True)
 
 

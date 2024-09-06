@@ -102,6 +102,7 @@ def test_get_existing(client):
     assert response_json.get('classes')[0].get('alias') == 'wizard'
 
 
+@pytest.mark.dependency(name="get_non_existing")
 def test_get_non_existing(client):
 
     response = client.get("/caster/1")
@@ -110,3 +111,30 @@ def test_get_non_existing(client):
     response_json = response.json()
     assert (response_json.get('detail')[0].get('type')
             == CoreExcType.NOT_FOUND.value)
+
+
+@pytest.mark.dependency(depends=["create_valid", "get_non_existing"])
+def test_delete_existing(client):
+
+    # arrange
+    data = {
+        "name": "Player",
+        "game_class": "wizard",
+        "intelligence": 16,
+        "wisdom": 10,
+        "charisma": 10
+    }
+    client.post('/caster/create', json=data)
+
+    # act -> assert
+    response = client.delete("/caster/1")
+    assert response.status_code == status.HTTP_200_OK
+
+    next_response = client.get("/caster/1")
+    assert next_response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_delete_non_existing(client):
+
+    response = client.delete("/caster/1")
+    assert response.status_code == status.HTTP_404_NOT_FOUND

@@ -14,6 +14,10 @@ class ExcDto(BaseModel):
     detail: List[ExcDataDto]
 
 
+class OkDto(BaseModel):
+    detail: str = 'OK'
+
+
 class IdDto(BaseModel):
     id: int
 
