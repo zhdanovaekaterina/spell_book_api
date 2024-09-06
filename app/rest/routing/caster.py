@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from dependency_injector.wiring import inject, Provide
 
-from app.core import CasterService
-from app.rest.dto import CasterCreateInDto, IdDto, ExcDto
+from app.core import CasterService, NotFoundException
+from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto
 
 
 router = APIRouter(prefix='/caster')
@@ -54,4 +54,31 @@ def create_caster(
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={'detail': errs}
+        )
+
+
+@router.get(
+    '/{caster_id}',
+    status_code=status.HTTP_200_OK,
+    response_model=CasterDto,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            'model': ExcDto
+        },
+    }
+)
+@inject
+def get_caster(
+        caster_id: int,
+        service: CasterService = Depends(Provide['caster_service']),
+    ):
+
+    try:
+        caster = service.get(caster_id)
+        return CasterDto(**caster)
+
+    except NotFoundException as err:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={'detail': [err.error()]}
         )
