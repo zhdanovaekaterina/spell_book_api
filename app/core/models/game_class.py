@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 from pydantic_core import PydanticCustomError
 from dependency_injector.wiring import inject, Provide
 
+from app.core.models.const import MIN_CASTER_LEVEL, MAX_CASTER_LEVEL
 from app.core.base.exc_type import CoreExcType
 from app.core.interfaces.repository import RepositoryInterface
 
@@ -14,7 +15,7 @@ class GameClass(BaseModel):
     """
 
     alias: str
-    level: int = Field(default=1, ge=1, le=20)
+    level: int = Field(default=1, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
     subclass: Optional[str] = None
 
     @model_validator(mode='after')
