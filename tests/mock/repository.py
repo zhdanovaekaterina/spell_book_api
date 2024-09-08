@@ -1,8 +1,11 @@
 from typing import List
 
 from app.core import NotFoundException
+from app.core.models.const import MAX_CASTER_LEVEL
 from app.core.interfaces.repository import RepositoryInterface
-from app.core.interfaces.dto import GameClassInfo
+from app.core.interfaces.dto import (GameClassInfo,
+                                     ParamsToGetSpellsAvailable, SpellInfo)
+from tests.mock.params import params_available_for_class
 
 
 class MockRepository(RepositoryInterface):
@@ -13,8 +16,15 @@ class MockRepository(RepositoryInterface):
     # эмуляция таблицы 'caster'
     caster = []
 
+    # эмуляция связей данных классов и заклинаний
+    spell_to_class = {}
+
     def __init__(self):
         self.caster = []
+
+        for param in params_available_for_class:
+            key = self._get_key_from_dict(param[0])
+            self.spell_to_class[key] = [SpellInfo(**p) for p in param[1]]
 
     def get_all_classes(self) -> List[GameClassInfo]:
 
@@ -48,6 +58,12 @@ class MockRepository(RepositoryInterface):
         else:
             raise KeyError()
 
+    def get_available_spells(self, class_info: ParamsToGetSpellsAvailable) \
+            -> List[SpellInfo]:
+
+        key = self._get_key_from_dict(class_info.model_dump())
+        return self.spell_to_class.get(key, [])
+
     def add_caster(self, data) -> int:
         data.id = len(self.caster) + 1
         self.caster.append(data)
@@ -76,3 +92,18 @@ class MockRepository(RepositoryInterface):
             self.caster.pop(index)
         else:
             raise NotFoundException
+
+    @staticmethod
+    def _get_key_from_dict(dict_data: dict) -> str:
+        """
+        Получение ключа из словаря параметров
+        :param dict_data:
+        :return:
+        """
+
+        keys_list = [
+            str(dict_data.get('game_class', None)),
+            str(dict_data.get('game_subclass', None)),
+            str(dict_data.get('level', MAX_CASTER_LEVEL)),
+        ]
+        return '_'.join(keys_list)

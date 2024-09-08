@@ -1,4 +1,7 @@
+from typing import List
+
 from app.core.base.service import Service
+from app.core.interfaces.dto import ParamsToGetSpellsAvailable
 
 
 class InfoService(Service):
@@ -6,12 +9,15 @@ class InfoService(Service):
     Служба для получения справочной информации по заклинателям
     """
 
-    def get_available(self):
+    def get_available(self, **data) -> List[dict]:
         """
         Получить доступные заклинания
         :return:
         """
-        pass
+
+        info = ParamsToGetSpellsAvailable(**data)
+        spells = self.repository.get_available_spells(info)
+        return [spell.model_dump() for spell in spells]
 
     def get_game_classes(self):
         """
@@ -25,9 +31,9 @@ class InfoService(Service):
         """
         pass
 
-    def get_cell_progress(self):
+    def get_cells(self):
         """
-        Получить прогресс ячеек в зависимости от типа кастера
+        Получить доступные ячейки
         :return:
         """
         pass

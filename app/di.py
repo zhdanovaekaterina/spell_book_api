@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 
 from app.repository import DbRepository
-from app.core import CasterService
+from app.core import CasterService, InfoService
 
 
 class Container(containers.DeclarativeContainer):
@@ -17,7 +17,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     # Служба работы с заклинателями
-    caster_service = providers.Factory(
-        CasterService,
-        repository=repository
-    )
+    caster_service = providers.Factory(CasterService, repository=repository)
+
+    # Инфо-служба
+    info_service = providers.Factory(InfoService, repository=repository)

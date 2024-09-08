@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.core.interfaces.dto import GameClassInfo
+from app.core.interfaces.dto import (GameClassInfo,
+                                     ParamsToGetSpellsAvailable, SpellInfo)
 
 
 class RepositoryInterface(ABC):
     """
     Интерфейс для загрузки внешних данных
     """
+
+    # Справочные методы по классам
 
     @abstractmethod
     def get_all_classes(self) -> List[GameClassInfo]:
@@ -26,6 +29,19 @@ class RepositoryInterface(ABC):
         :return: GameClassInfo
         :raise: KeyError - если класс не найден
         """
+
+    # Справочные методы по заклинаниям
+
+    @abstractmethod
+    def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
+            -> List[SpellInfo]:
+        """
+        Получение списка заклинаний, доступных для переданных параметров
+        :param class_info: ParamsToGetSpellsAvailable
+        :return: List[SpellInfo]
+        """
+
+    # CRUD для персонажей
 
     @abstractmethod
     # todo: указать тип Caster у даты и разобраться с циклическими импортами

@@ -7,7 +7,8 @@ from sqlalchemy.exc import NoResultFound
 
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
-from app.core.interfaces.dto import GameClassInfo
+from app.core.interfaces.dto import (GameClassInfo,
+                                     ParamsToGetSpellsAvailable, SpellInfo)
 from app.core.interfaces.repository import RepositoryInterface
 from app.repository.db.models import (GameClass, GameSubclass,
                                       Caster as DbCaster, CasterClass)
@@ -46,6 +47,10 @@ class DbRepository(RepositoryInterface):
                 raise KeyError
 
             return self._parse_class_to_out(data)
+
+    def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
+            -> List[SpellInfo]:
+        ...
 
     def add_caster(self, data) -> int:
         model = self._parse_model_to_in(data)
