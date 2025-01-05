@@ -2,8 +2,8 @@ import pytest
 from sqlalchemy import event
 
 from app.di import Container
-from app.repository.db.models import Base, GameClass, GameSubclass
-from tests.db.params import game_class_table_data, game_subclass_table_data
+from app.repository.db.models import Base, GameClass, GameSubclass, GameClassType
+from tests.db.params import game_class_table_data, game_subclass_table_data, game_class_type_table_data
 
 
 @pytest.fixture(scope='module')
@@ -43,12 +43,14 @@ def full_db(clean_db):
     :return:
     """
 
+    game_class_type_obj_list = [GameClassType(**d) for d in game_class_type_table_data]
     game_class_obj_list = [GameClass(**d) for d in game_class_table_data]
     game_subclass_obj_list\
         = [GameSubclass(**d) for d in game_subclass_table_data]
 
     with clean_db.session as session:
         with session.begin():
+            session.bulk_save_objects(game_class_type_obj_list)
             session.bulk_save_objects(game_class_obj_list)
             session.bulk_save_objects(game_subclass_obj_list)
 

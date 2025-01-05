@@ -8,6 +8,8 @@ mapper_registry = registry()
 Base = mapper_registry.generate_base()
 
 
+# Справочники - d_
+
 class GameClass(Base, Prettify):
     """
     Справочник классов
@@ -17,9 +19,11 @@ class GameClass(Base, Prettify):
     alias = Column(String(32), primary_key=True)
     title = Column(String(255), nullable=False)
     choose_subclass_level = Column(SmallInteger)
+    type = Column(String(32), nullable=False)  # full, half etc., todo связь с GameClassType
 
     subclasses = relationship('GameSubclass', back_populates='game_class')
     caster_class = relationship('CasterClass', back_populates='game_class')
+    spell_available = relationship('SpellAvailability', back_populates='game_class')
 
 
 class GameSubclass(Base, Prettify):
@@ -34,7 +38,58 @@ class GameSubclass(Base, Prettify):
 
     game_class = relationship('GameClass', back_populates='subclasses')
     caster_class = relationship('CasterClass', back_populates='game_subclass')
+    spell_available = relationship('SpellAvailability',
+                                   back_populates='game_subclass')
 
+
+class GameClassType(Base, Prettify):
+    """
+    Типы заклинателей - фуллкастер, полукастер итд.
+    Плюс прогресс по количеству и уровням ячеек в зависимости от
+    уровня персонажа
+    todo: составной ключ из первых 3х колонок
+    """
+
+    __tablename__ = 'd_game_class_type'
+    alias = Column(String(32), primary_key=True)  # todo: тут Enum
+    class_level = Column(SmallInteger, primary_key=True)
+    cell_level = Column(SmallInteger, primary_key=True)
+    cell_add_amount = Column(SmallInteger, nullable=False)
+
+
+class Spell(Base, Prettify):
+    """
+    Справочник заклинаний
+    """
+
+    __tablename__ = 'd_spell'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    alias = Column(String(255), nullable=False, unique=True)
+    title = Column(String(255), nullable=False)
+    level = Column(SmallInteger, nullable=False)
+
+    spell_available = relationship('SpellAvailability', back_populates='spell')
+
+
+# Таблицы связей между справочниками - dl_
+
+class SpellAvailability(Base, Prettify):
+    """
+    Доступность заклинаний классам и подклассам
+    """
+
+    __tablename__ = 'dl_spell_availability'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    spell_id = Column(Integer, ForeignKey('d_spell.id'), nullable=False)
+    class_alias = Column(String(32), ForeignKey('d_class.alias'), nullable=False)
+    subclass_alias = Column(String(32), ForeignKey('d_subclass.alias'))
+
+    spell = relationship('Spell', back_populates='spell_available')
+    game_class = relationship('GameClass', back_populates='spell_available')
+    game_subclass = relationship('GameSubclass', back_populates='spell_available')
+
+
+# Рабочие таблицы - g_
 
 class Caster(Base, Prettify):
     """
@@ -53,6 +108,8 @@ class Caster(Base, Prettify):
                                 cascade='all,delete',
                                 passive_deletes=True)
 
+
+# Таблицы связей - l_
 
 class CasterClass(Base, Prettify):
     """

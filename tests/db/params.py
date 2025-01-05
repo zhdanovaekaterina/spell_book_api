@@ -4,11 +4,13 @@ game_class_table_data = [
         'alias': 'wizard',
         'title': 'Волшебник',
         'choose_subclass_level': 2,
+        'type': 'full',
     },
     {
         'alias': 'cleric',
         'title': 'Жрец',
         'choose_subclass_level': 1,
+        'type': 'full',
     },
 ]
 
@@ -40,6 +42,17 @@ game_subclass_table_data = [
         'alias': 'light',
         'title': 'домен света',
     },
+]
+
+
+# таблица типов классов
+game_class_type_table_data = [
+    {
+        'alias': 'full',
+        'class_level': 1,
+        'cell_level': 1,
+        'cell_add_amount': 2,
+    }
 ]
 
 
