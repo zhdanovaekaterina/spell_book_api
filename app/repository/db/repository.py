@@ -1,9 +1,10 @@
 from typing import List
 from os import environ
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_, or_
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.sql.expression import func
 
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
@@ -11,7 +12,8 @@ from app.core.interfaces.dto import (GameClassInfo,
                                      ParamsToGetSpellsAvailable, SpellInfo)
 from app.core.interfaces.repository import RepositoryInterface
 from app.repository.db.models import (GameClass, GameSubclass,
-                                      Caster as DbCaster, CasterClass)
+                                      Caster as DbCaster, CasterClass, Spell,
+                                      SpellAvailability, GameClassType)
 
 
 class DbRepository(RepositoryInterface):
@@ -50,7 +52,44 @@ class DbRepository(RepositoryInterface):
 
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
             -> List[SpellInfo]:
-        ...
+
+        with self.session:
+
+            # получаем максимальный доступный уровень ячейки для уровня класса
+            max_cell = self.session \
+                .query(func.max(GameClassType.cell_level)) \
+                .join(GameClass, GameClass.type == GameClassType.alias) \
+                .where(and_(
+                    GameClassType.class_level <= class_info.level,
+                    GameClass.alias == class_info.game_class,
+                )) \
+                .one()[0]
+
+            if class_info.game_subclass:  # подкласс указан
+                where_condition = and_(
+                    SpellAvailability.class_alias == class_info.game_class,
+                    Spell.level <= max_cell,
+                    or_(
+                        SpellAvailability.subclass_alias == None,
+                        SpellAvailability.subclass_alias == class_info.game_subclass,
+                    )
+                )
+            else:  # подкласс не указан
+                where_condition = and_(
+                    SpellAvailability.class_alias == class_info.game_class,
+                    Spell.level <= max_cell,
+                    SpellAvailability.subclass_alias == None,
+                )
+
+            data = self.session \
+                .query(Spell) \
+                .join(SpellAvailability) \
+                .join(GameClass) \
+                .join(GameClassType, GameClass.type == GameClassType.alias) \
+                .where(where_condition) \
+                .all()
+
+            return [SpellInfo(**d.__dict__) for d in data]
 
     def add_caster(self, data) -> int:
         model = self._parse_model_to_in(data)

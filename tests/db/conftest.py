@@ -2,8 +2,10 @@ import pytest
 from sqlalchemy import event
 
 from app.di import Container
-from app.repository.db.models import Base, GameClass, GameSubclass, GameClassType
-from tests.db.params import game_class_table_data, game_subclass_table_data, game_class_type_table_data
+from app.repository.db.models import Base, GameClass, GameSubclass, GameClassType, Spell, SpellAvailability
+from tests.db.params import (game_class_table_data, game_subclass_table_data,
+                             game_class_type_table_data, spell_table_data,
+                             spell_available_data)
 
 
 @pytest.fixture(scope='module')
@@ -55,3 +57,29 @@ def full_db(clean_db):
             session.bulk_save_objects(game_subclass_obj_list)
 
     return clean_db
+
+
+@pytest.fixture(scope='module')
+def full_db_spells(full_db):
+    """
+    Добавляет тестовые заклинания в базу
+    :return:
+    """
+
+    spell_obj_list = [Spell(**d) for d in spell_table_data]
+
+    spell_available_obj_list = []
+    for cls in spell_available_data:
+        for spell in cls.get('spells'):
+            spell_available_obj_list.append(SpellAvailability(
+                spell_id=spell,
+                class_alias=cls.get('class'),
+                subclass_alias=cls.get('subclass')
+            ))
+
+    with full_db.session as session:
+        with session.begin():
+            session.bulk_save_objects(spell_obj_list)
+            session.bulk_save_objects(spell_available_obj_list)
+
+    return full_db

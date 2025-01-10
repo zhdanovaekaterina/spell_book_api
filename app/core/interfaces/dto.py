@@ -32,3 +32,4 @@ class SpellInfo(BaseModel):
     id: int
     alias: str
     title: str
+    level: int
