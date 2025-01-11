@@ -12,7 +12,7 @@ class InfoService(Service):
     def get_available(self, **data) -> List[dict]:
         """
         Получить доступные заклинания
-        :return:
+        :return: List[Spell]
         """
 
         info = ParamsToGetSpellsAvailable(**data)

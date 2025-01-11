@@ -23,13 +23,3 @@ class ParamsToGetSpellsAvailable(BaseModel):
     game_class: str
     game_subclass: Optional[str] = None
     level: Optional[int] = MAX_CASTER_LEVEL
-
-
-class SpellInfo(BaseModel):
-    """
-    Данные о заклинании из репозитория
-    """
-    id: int
-    alias: str
-    title: str
-    level: int

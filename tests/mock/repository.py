@@ -2,9 +2,10 @@ from typing import List
 
 from app.core import NotFoundException
 from app.core.models.const import MAX_CASTER_LEVEL
+from app.core.models.spell import Spell
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import (GameClassInfo,
-                                     ParamsToGetSpellsAvailable, SpellInfo)
+                                     ParamsToGetSpellsAvailable)
 from tests.mock.params import params_available_for_class
 
 
@@ -24,7 +25,7 @@ class MockRepository(RepositoryInterface):
 
         for param in params_available_for_class:
             key = self._get_key_from_dict(param[0])
-            self.spell_to_class[key] = [SpellInfo(**p) for p in param[1]]
+            self.spell_to_class[key] = [Spell(**p) for p in param[1]]
 
     def get_all_classes(self) -> List[GameClassInfo]:
 
@@ -59,7 +60,7 @@ class MockRepository(RepositoryInterface):
             raise KeyError()
 
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable) \
-            -> List[SpellInfo]:
+            -> List[Spell]:
 
         key = self._get_key_from_dict(class_info.model_dump())
         return self.spell_to_class.get(key, [])

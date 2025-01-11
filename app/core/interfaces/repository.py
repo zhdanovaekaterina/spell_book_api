@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from app.core.interfaces.dto import (GameClassInfo,
-                                     ParamsToGetSpellsAvailable, SpellInfo)
+                                     ParamsToGetSpellsAvailable)
 
 
 class RepositoryInterface(ABC):
@@ -33,12 +33,13 @@ class RepositoryInterface(ABC):
     # Справочные методы по заклинаниям
 
     @abstractmethod
+    # todo: указать тип Spell у возвращаемого значения
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
-            -> List[SpellInfo]:
+            -> list:
         """
         Получение списка заклинаний, доступных для переданных параметров
         :param class_info: ParamsToGetSpellsAvailable
-        :return: List[SpellInfo]
+        :return: List[Spell]
         """
 
     # CRUD для персонажей
@@ -48,7 +49,7 @@ class RepositoryInterface(ABC):
     def add_caster(self, data) -> int:
         """
         Добавление нового персонажа
-        :param data: модель персонажа
+        :param data: Caster - модель персонажа
         :return: id заклинателя
         """
 
@@ -58,7 +59,7 @@ class RepositoryInterface(ABC):
         """
         Получение персонажа по id
         :param caster_id:
-        :return:
+        :return: Caster
         :raise: NotFoundException - если персонаж не найден по id
         """
 
