@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from app.di import Container
 from app.repository.db.models import Base
-from app.rest.routing import caster_router
+from app.rest.routing import caster_router, info_router
 
 
 # конфигурация контейнера зависимостей
@@ -20,6 +20,7 @@ container.config.from_dict({
 })
 container.wire(modules=[
     'app.rest.routing.caster',
+    'app.rest.routing.info',
     'app.core.models.game_class'
 ])
 
@@ -34,3 +35,4 @@ app = FastAPI(
 
 # подключение роутеров
 app.include_router(caster_router)
+app.include_router(info_router)
