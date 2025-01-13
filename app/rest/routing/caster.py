@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
-from pydantic import ValidationError
 from dependency_injector.wiring import inject, Provide
 
-from app.core import CasterService, NotFoundException
+from app.core import CasterService
 from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
 
 
@@ -40,21 +38,8 @@ def create_caster(
         }
     }
 
-    try:
-        caster_id = service.create(**data)
-        return IdDto(id=caster_id)
-
-    except ValidationError as err:
-
-        errs = [{
-            'type': e.get('type'),
-            'msg': e.get('msg')
-        } for e in err.errors()]
-
-        return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            content={'detail': errs}
-        )
+    caster_id = service.create(**data)
+    return IdDto(id=caster_id)
 
 
 @router.get(
@@ -72,16 +57,8 @@ def get_caster(
     caster_id: int,
     service: CasterService = Depends(Provide['caster_service']),
 ):
-
-    try:
-        caster = service.get(caster_id)
-        return CasterDto(**caster)
-
-    except NotFoundException as err:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={'detail': [err.error()]}
-        )
+    caster = service.get(caster_id)
+    return CasterDto(**caster)
 
 
 @router.delete(
@@ -99,12 +76,5 @@ def delete_caster(
     caster_id: int,
     service: CasterService = Depends(Provide['caster_service']),
 ):
-    try:
-        service.delete(caster_id)
-        return OkDto()
-
-    except NotFoundException as err:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={'detail': [err.error()]}
-        )
+    service.delete(caster_id)
+    return OkDto()

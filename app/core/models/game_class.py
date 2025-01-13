@@ -75,11 +75,30 @@ class ParamsToGetSpellsAvailable(GameClass):
         # Проверяем валидно введенный класс
         # todo: убрать дублирование с родительским классом
         try:
-            repo.get_one_class(self.alias)
-            return self
+            game_class = repo.get_one_class(self.alias)
+
         except KeyError:
             raise PydanticCustomError(
                 CoreExcType.INVALID_CLASS.value,
                 "invalid class '{class}' provided",
                 {'class': self.alias}
             )
+
+        # Проверяем необходимость наличия подкласса
+        if self.level < game_class.choose_subclass_level:  # не должно быть
+            self.subclass = None  # очищаем, если вдруг передан
+
+        elif self.subclass is None:  # должен быть, но его нет
+            # делаем ничего - дальше просто вернем заклинания только для чистого класса
+            ...
+
+        else:  # должен быть и он есть
+            # Проверяем валидный подкласс для класса
+            if self.subclass not in game_class.subclasses:
+                raise PydanticCustomError(
+                    CoreExcType.INVALID_SUBCLASS.value,
+                    "invalid subclass provided for a class {class}",
+                    {'class': self.alias}
+                )
+
+        return self

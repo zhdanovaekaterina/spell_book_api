@@ -29,8 +29,5 @@ def get_spells_available(
     service: InfoService = Depends(Provide['info_service']),
 ):
 
-    spells = service.get_available(
-        alias=alias, subclass=subclass, level=level
-    )
-
+    spells = service.get_available(alias=alias, subclass=subclass, level=level)
     return [SpellDto(**s) for s in spells]
