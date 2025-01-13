@@ -15,7 +15,7 @@ class GameClass(BaseModel):
     """
 
     alias: str
-    level: int = Field(default=1, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
+    level: int = Field(default=MIN_CASTER_LEVEL, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
     subclass: Optional[str] = None
 
     @model_validator(mode='after')
@@ -56,3 +56,30 @@ class GameClass(BaseModel):
                 )
 
             return self
+
+
+class ParamsToGetSpellsAvailable(GameClass):
+    """
+    Параметры для получения списка доступных заклинаний
+    """
+
+    # когда получаем заклинания, по умолчанию берем максимально возможный уровень
+    level: int = Field(default=MAX_CASTER_LEVEL, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
+
+    @model_validator(mode='after')
+    @inject
+    def valid_model(self,
+                    repo: RepositoryInterface = Provide['repository']
+                    ) -> BaseModel:
+
+        # Проверяем валидно введенный класс
+        # todo: убрать дублирование с родительским классом
+        try:
+            repo.get_one_class(self.alias)
+            return self
+        except KeyError:
+            raise PydanticCustomError(
+                CoreExcType.INVALID_CLASS.value,
+                "invalid class '{class}' provided",
+                {'class': self.alias}
+            )

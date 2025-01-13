@@ -3,7 +3,7 @@ params_available_for_class = (
     (  # без указания уровня должны вернуться все доступные заклинания
         # для класса
         {
-            'game_class': 'wizard'
+            'alias': 'wizard'
         },
         [
             {'id': 1, 'alias': 'spell1', 'title': 'spell_wizard_1lvl', 'level': 1},
@@ -14,7 +14,7 @@ params_available_for_class = (
     ),
     (  # на первом уровне - получаем только доступные первому
         {
-            'game_class': 'wizard',
+            'alias': 'wizard',
             'level': 1
         },
         [
@@ -23,7 +23,7 @@ params_available_for_class = (
     ),
     (  # на пятом уровне - доступные пятому (плюс одно общее)
         {
-            'game_class': 'wizard',
+            'alias': 'wizard',
             'level': 5
         },
         [
@@ -35,7 +35,7 @@ params_available_for_class = (
     (  # на первом уровне для класса, где требуется подкласс
         # - получаем только те, что доступны чистому классу
         {
-            'game_class': 'cleric',
+            'alias': 'cleric',
             'level': 1
         },
         [
@@ -44,8 +44,8 @@ params_available_for_class = (
     ),
     (  # если подкласс указан, получаем также заклинания для подкласса
         {
-            'game_class': 'cleric',
-            'game_subclass': 'life',
+            'alias': 'cleric',
+            'subclass': 'life',
             'level': 1
         },
         [
@@ -55,7 +55,7 @@ params_available_for_class = (
     ),
     (  # убедимся что на пятом уровне получаем общее заклинание ...
         {
-            'game_class': 'cleric',
+            'alias': 'cleric',
             'level': 5
         },
         [
@@ -65,8 +65,8 @@ params_available_for_class = (
     ),
     (  # ... и это также работает, если указать подкласс
         {
-            'game_class': 'cleric',
-            'game_subclass': 'life',
+            'alias': 'cleric',
+            'subclass': 'life',
             'level': 5
         },
         [
@@ -77,7 +77,7 @@ params_available_for_class = (
     ),
     (  # а теперь попробуем сделать все то же самое для полукастера - соль в получении правильного уровня ячейки по уровню персонажа
         {
-            'game_class': 'ranger',
+            'alias': 'ranger',
             'level': 5
         },
         [

@@ -1,7 +1,7 @@
 from typing import List
 
 from app.core.base.service import Service
-from app.core.interfaces.dto import ParamsToGetSpellsAvailable
+from app.core.models.game_class import ParamsToGetSpellsAvailable
 
 
 class InfoService(Service):

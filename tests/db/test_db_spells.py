@@ -6,7 +6,7 @@
 
 import pytest
 
-from app.core.interfaces.dto import ParamsToGetSpellsAvailable
+from app.core.models.game_class import ParamsToGetSpellsAvailable
 from tests.mock.params import params_available_for_class
 
 

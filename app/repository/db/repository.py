@@ -9,8 +9,8 @@ from sqlalchemy.sql.expression import func
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
 from app.core.models.spell import Spell as CoreSpell
-from app.core.interfaces.dto import (GameClassInfo,
-                                     ParamsToGetSpellsAvailable)
+from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.interfaces.dto import GameClassInfo
 from app.core.interfaces.repository import RepositoryInterface
 from app.repository.db.models import (GameClass, GameSubclass,
                                       Caster as DbCaster, CasterClass, Spell,
@@ -32,7 +32,7 @@ class DbRepository(RepositoryInterface):
         with self.session:
             data = self.session\
                 .query(GameClass)\
-                .join(GameSubclass)\
+                .join(GameSubclass, isouter=True)\
                 .all()
 
             return [self._parse_class_to_out(g_class) for g_class in data]
@@ -43,7 +43,7 @@ class DbRepository(RepositoryInterface):
             try:
                 data = self.session\
                     .query(GameClass)\
-                    .join(GameSubclass)\
+                    .join(GameSubclass, isouter=True)\
                     .where(GameClass.alias == alias)\
                     .one()
             except NoResultFound:
@@ -62,22 +62,22 @@ class DbRepository(RepositoryInterface):
                 .join(GameClass, GameClass.type == GameClassType.alias) \
                 .where(and_(
                     GameClassType.class_level <= class_info.level,
-                    GameClass.alias == class_info.game_class,
+                    GameClass.alias == class_info.alias,
                 )) \
                 .one()[0]
 
-            if class_info.game_subclass:  # подкласс указан
+            if class_info.subclass:  # подкласс указан
                 where_condition = and_(
-                    SpellAvailability.class_alias == class_info.game_class,
+                    SpellAvailability.class_alias == class_info.alias,
                     Spell.level <= max_cell,
                     or_(
                         SpellAvailability.subclass_alias == None,
-                        SpellAvailability.subclass_alias == class_info.game_subclass,
+                        SpellAvailability.subclass_alias == class_info.subclass,
                     )
                 )
             else:  # подкласс не указан
                 where_condition = and_(
-                    SpellAvailability.class_alias == class_info.game_class,
+                    SpellAvailability.class_alias == class_info.alias,
                     Spell.level <= max_cell,
                     SpellAvailability.subclass_alias == None,
                 )

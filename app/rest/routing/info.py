@@ -23,14 +23,14 @@ router = APIRouter(prefix='/info')
 )
 @inject
 def get_spells_available(
-    game_class: str,
-    game_subclass: str = None,
+    alias: str,
+    subclass: str = None,
     level: int = MAX_CASTER_LEVEL,
     service: InfoService = Depends(Provide['info_service']),
 ):
 
     spells = service.get_available(
-        game_class=game_class, game_subclass=game_subclass, level=level
+        alias=alias, subclass=subclass, level=level
     )
 
     return [SpellDto(**s) for s in spells]

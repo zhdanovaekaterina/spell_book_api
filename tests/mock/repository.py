@@ -3,9 +3,9 @@ from typing import List
 from app.core import NotFoundException
 from app.core.models.const import MAX_CASTER_LEVEL
 from app.core.models.spell import Spell
+from app.core.models.game_class import ParamsToGetSpellsAvailable
 from app.core.interfaces.repository import RepositoryInterface
-from app.core.interfaces.dto import (GameClassInfo,
-                                     ParamsToGetSpellsAvailable)
+from app.core.interfaces.dto import GameClassInfo
 from tests.mock.params import params_available_for_class
 
 
@@ -39,6 +39,11 @@ class MockRepository(RepositoryInterface):
                 'alias': 'cleric',
                 'subclasses': ['life', 'peace', 'light'],
                 'choose_subclass_level': 1
+            }),
+            GameClassInfo(**{
+                'alias': 'ranger',
+                'subclasses': [],
+                'choose_subclass_level': 3
             })
         ]
 
@@ -55,6 +60,12 @@ class MockRepository(RepositoryInterface):
                 'alias': 'cleric',
                 'subclasses': ['life', 'peace', 'light'],
                 'choose_subclass_level': 1
+            })
+        elif alias == 'ranger':
+            return GameClassInfo(**{
+                'alias': 'ranger',
+                'subclasses': [],
+                'choose_subclass_level': 3
             })
         else:
             raise KeyError()
@@ -103,8 +114,8 @@ class MockRepository(RepositoryInterface):
         """
 
         keys_list = [
-            str(dict_data.get('game_class', None)),
-            str(dict_data.get('game_subclass', None)),
+            str(dict_data.get('alias', None)),
+            str(dict_data.get('subclass', None)),
             str(dict_data.get('level', MAX_CASTER_LEVEL)),
         ]
         return '_'.join(keys_list)

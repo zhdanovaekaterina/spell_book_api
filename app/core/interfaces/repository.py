@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.core.interfaces.dto import (GameClassInfo,
-                                     ParamsToGetSpellsAvailable)
+from app.core.interfaces.dto import GameClassInfo
 
 
 class RepositoryInterface(ABC):
@@ -33,9 +32,9 @@ class RepositoryInterface(ABC):
     # Справочные методы по заклинаниям
 
     @abstractmethod
+    # todo: указать тип ParamsToGetSpellsAvailable у параметра
     # todo: указать тип Spell у возвращаемого значения
-    def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
-            -> list:
+    def get_available_spells(self, class_info) -> list:
         """
         Получение списка заклинаний, доступных для переданных параметров
         :param class_info: ParamsToGetSpellsAvailable

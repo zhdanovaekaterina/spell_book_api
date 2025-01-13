@@ -178,5 +178,10 @@ game_class_result = [
         'alias': 'cleric',
         'subclasses': ['life', 'peace', 'light'],
         'choose_subclass_level': 1
+    },
+    {
+        'alias': 'ranger',
+        'subclasses': [],
+        'choose_subclass_level': 3
     }
 ]
