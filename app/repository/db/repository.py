@@ -88,6 +88,7 @@ class DbRepository(RepositoryInterface):
                 .join(GameClass) \
                 .join(GameClassType, GameClass.type == GameClassType.alias) \
                 .where(where_condition) \
+                .order_by(Spell.level) \
                 .all()
 
             # маппинг

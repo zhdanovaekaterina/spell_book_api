@@ -8,8 +8,8 @@ params_available_for_class = (
         [
             {'id': 1, 'alias': 'spell1', 'title': 'spell_wizard_1lvl', 'level': 1},
             {'id': 2, 'alias': 'spell2', 'title': 'spell_wizard_5lvl', 'level': 3},
-            {'id': 3, 'alias': 'spell3', 'title': 'spell_wizard_20lvl', 'level': 9},
             {'id': 6, 'alias': 'spell6', 'title': 'spell_wiz_cleric_5lvl', 'level': 3},
+            {'id': 3, 'alias': 'spell3', 'title': 'spell_wizard_20lvl', 'level': 9},
         ]
     ),
     (  # на первом уровне - получаем только доступные первому
@@ -71,8 +71,8 @@ params_available_for_class = (
         },
         [
             {'id': 4, 'alias': 'spell4', 'title': 'spell_cleric_1lvl', 'level': 1},
-            {'id': 6, 'alias': 'spell6', 'title': 'spell_wiz_cleric_5lvl', 'level': 3},
             {'id': 5, 'alias': 'spell5', 'title': 'spell_cleric_life_1lvl', 'level': 1},
+            {'id': 6, 'alias': 'spell6', 'title': 'spell_wiz_cleric_5lvl', 'level': 3},
         ]
     ),
     (  # а теперь попробуем сделать все то же самое для полукастера - соль в получении правильного уровня ячейки по уровню персонажа
