@@ -1,6 +1,7 @@
 import pytest
 
 from app.core import CasterModel, NotFoundException
+from tests.mock.params import params_available_for_caster
 
 dict_caster = [({
     'name': 'Player1',
@@ -78,3 +79,11 @@ def test_delete_existing(caster_service):
     left_caster = caster_service.get(2)
     assert left_caster
     assert left_caster['id'] == 2
+
+
+@pytest.mark.dependency(depends=["create", "get_existing"])
+@pytest.mark.parametrize("data, expected_spells", params_available_for_caster)
+def test_get_available(caster_service, data, expected_spells):
+
+    available = caster_service.get_available(data)
+    assert available == expected_spells

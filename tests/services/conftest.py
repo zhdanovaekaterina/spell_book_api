@@ -2,6 +2,7 @@ import pytest
 
 from app.di import Container
 from tests.mock.repository import MockRepository
+from tests.mock.info_service import MockInfoService
 
 
 @pytest.fixture(scope='module')
@@ -24,8 +25,11 @@ def caster_service(container):
     """
 
     container.wire(modules=[
-        'app.core.models.game_class'
+        'app.core.models.game_class',
+        'app.core.services.caster'
     ])
+
+    container.info_service.override(MockInfoService())
     return container.caster_service()
 
 

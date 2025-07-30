@@ -8,7 +8,7 @@ from app.core.models.const import MAX_CASTER_LEVEL
 from app.rest.dto import SpellDto, ExcDto
 
 
-router = APIRouter(prefix='/info')
+router = APIRouter(prefix='/info', tags=["Info"])
 
 
 @router.get(

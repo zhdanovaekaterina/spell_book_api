@@ -1,3 +1,7 @@
+from typing import List
+
+from dependency_injector.wiring import inject, Provide
+
 from app.core.base.service import Service
 from app.core.models.caster import Caster
 
@@ -77,9 +81,19 @@ class CasterService(Service):
         """
         pass
 
-    def get_available(self):
+    @inject
+    def get_available(self,
+                      caster_id: int,
+                      info_service: Service = Provide['info_service']
+                      ) -> List[dict]:
         """
         Получить доступные заклинания
-        :return:
+        :return: List[Spell]
+        :raise: NotFoundException - если персонаж не найден по id
         """
-        pass
+        caster = self.get(caster_id)
+        alias = caster.get("classes")[0].get("alias")  # todo: пока что это все расчитано только на 1 класс
+        level = caster.get("classes")[0].get("level")
+        subclass = caster.get("classes")[0].get("subclass")
+
+        return info_service.get_available(alias=alias, level=level, subclass=subclass)

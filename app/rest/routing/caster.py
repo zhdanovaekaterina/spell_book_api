@@ -5,7 +5,7 @@ from app.core import CasterService
 from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
 
 
-router = APIRouter(prefix='/caster')
+router = APIRouter(prefix='/caster', tags=["Caster"])
 
 
 @router.post(

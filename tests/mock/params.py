@@ -85,3 +85,13 @@ params_available_for_class = (
         ]
     )
 )
+
+# Мок-данные для проверки получения доступных заклинаний
+params_available_for_caster = (
+        (  # второй кастер - это волшебник 1 уровня, список должен быть для него
+        2,
+        [
+            {'id': 1, 'alias': 'spell1', 'title': 'spell_wizard_1lvl', 'level': 1},
+        ]
+    ),
+)
