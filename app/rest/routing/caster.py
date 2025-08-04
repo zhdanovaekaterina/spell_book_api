@@ -1,8 +1,10 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
 from app.core import CasterService
-from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
+from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto, SpellDto
 
 
 router = APIRouter(prefix='/caster', tags=["Caster"])
@@ -78,3 +80,21 @@ def delete_caster(
 ):
     service.delete(caster_id)
     return OkDto()
+
+
+@router.get(
+    "/{caster_id}/spells/available",
+    status_code=status.HTTP_200_OK,
+    response_model=List[SpellDto],  # todo: заменить на объект коллекции заклинаний
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            'model': ExcDto
+        },
+    }
+)
+@inject
+def get_spells_available(
+    caster_id: int,
+    service: CasterService = Depends(Provide['caster_service']),
+):
+    return service.get_available(caster_id)

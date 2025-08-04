@@ -24,7 +24,8 @@ container.config.from_dict({
 container.wire(modules=[
     'app.rest.routing.caster',
     'app.rest.routing.info',
-    'app.core.models.game_class'
+    'app.core.models.game_class',
+    'app.core.services.caster',
 ])
 
 

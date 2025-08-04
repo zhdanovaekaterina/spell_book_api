@@ -138,3 +138,21 @@ def test_delete_non_existing(client):
 
     response = client.delete("/caster/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+# здесь и далее в тестах используем мок-службу кастера, чтобы не эмулировать всю цепочку
+# с созданием кастера и связями с заклинаниями и снизить зависимость от служб
+def test_get_available_spells(client_mocked_caster_service):
+
+    response = client_mocked_caster_service.get("/caster/1/spells/available")
+    assert response.status_code == status.HTTP_200_OK
+
+    response_json = response.json()
+    assert len(response_json) == 2
+    assert response_json[0]["title"] == "some_spell_title_to_check"
+
+
+def test_get_available_spells_from_invalid_caster(client_mocked_caster_service):
+
+    response = client_mocked_caster_service.get("/caster/2/spells/available")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
