@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 from app.core import InfoService
 from app.core.models.const import MAX_CASTER_LEVEL
-from app.rest.dto import SpellDto, ExcDto
+from app.rest.dto import SpellDto, ExcDto, SpellAggregateDto
 
 
 router = APIRouter(prefix='/info', tags=["Info"])
@@ -14,7 +14,7 @@ router = APIRouter(prefix='/info', tags=["Info"])
 @router.get(
     '/spells/available',
     status_code=status.HTTP_200_OK,
-    response_model=List[SpellDto],
+    response_model=SpellAggregateDto,
     responses={
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
             'model': ExcDto
@@ -29,5 +29,4 @@ def get_spells_available(
     service: InfoService = Depends(Provide['info_service']),
 ):
 
-    spells = service.get_available(alias=alias, subclass=subclass, level=level)
-    return [SpellDto(**s) for s in spells]
+    return service.get_available(alias=alias, subclass=subclass, level=level)

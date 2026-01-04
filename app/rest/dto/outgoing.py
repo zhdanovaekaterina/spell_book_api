@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from app.core import CasterModel, SpellModel
+from app.core import CasterModel, SpellModel, SpellAggregate
 
 
 class ExcDataDto(BaseModel):
@@ -27,4 +27,8 @@ class CasterDto(CasterModel):
 
 
 class SpellDto(SpellModel):
+    ...
+
+
+class SpellAggregateDto(SpellAggregate):
     ...

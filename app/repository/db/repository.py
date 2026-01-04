@@ -8,7 +8,7 @@ from sqlalchemy.sql.expression import func
 
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
-from app.core.models.spell import Spell as CoreSpell
+from app.core.models.spell import SpellAggregate as CoreSpellAggregate, Spell as CoreSpell
 from app.core.models.game_class import ParamsToGetSpellsAvailable
 from app.core.interfaces.dto import GameClassInfo
 from app.core.interfaces.repository import RepositoryInterface
@@ -52,7 +52,7 @@ class DbRepository(RepositoryInterface):
             return self._parse_class_to_out(data)
 
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable)\
-            -> List[CoreSpell]:
+            -> CoreSpellAggregate:
 
         with self.session:
 
@@ -91,8 +91,11 @@ class DbRepository(RepositoryInterface):
                 .order_by(Spell.level) \
                 .all()
 
+            for d in data:
+                print(d.__dict__)
+
             # маппинг
-            return [CoreSpell(**d.__dict__) for d in data]
+            return CoreSpellAggregate(input=[CoreSpell(**d.__dict__) for d in data])
 
     def add_caster(self, data) -> int:
         model = self._parse_model_to_in(data)

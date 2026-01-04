@@ -1,5 +1,3 @@
-from typing import List
-
 from app.core.base.service import Service
 from app.core.models.game_class import ParamsToGetSpellsAvailable
 
@@ -9,15 +7,15 @@ class InfoService(Service):
     Служба для получения справочной информации по заклинателям
     """
 
-    def get_available(self, **data) -> List[dict]:
+    def get_available(self, **data) -> dict:
         """
         Получить доступные заклинания
-        :return: List[Spell]
+        :return: SpellAggregate
         """
 
         info = ParamsToGetSpellsAvailable(**data)
         spells = self.repository.get_available_spells(info)
-        return [spell.model_dump() for spell in spells]
+        return spells
 
     def get_game_classes(self):
         """

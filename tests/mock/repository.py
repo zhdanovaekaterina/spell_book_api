@@ -2,7 +2,7 @@ from typing import List
 
 from app.core import NotFoundException
 from app.core.models.const import MAX_CASTER_LEVEL
-from app.core.models.spell import Spell
+from app.core.models.spell import Spell, SpellAggregate
 from app.core.models.game_class import ParamsToGetSpellsAvailable
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
@@ -71,10 +71,11 @@ class MockRepository(RepositoryInterface):
             raise KeyError()
 
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable) \
-            -> List[Spell]:
+            -> SpellAggregate:
 
         key = self._get_key_from_dict(class_info.model_dump())
-        return self.spell_to_class.get(key, [])
+        spells_raw = self.spell_to_class.get(key, [])
+        return SpellAggregate(input=spells_raw)
 
     def add_caster(self, data) -> int:
         data.id = len(self.caster) + 1

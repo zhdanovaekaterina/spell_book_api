@@ -26,15 +26,15 @@ class SpellAggregate(BaseModel):
     Сущность для представления списка заклинаний
     """
 
-    levels_: Set[int] = Field(default_factory=set, exclude=False, repr=False)
+    levels_: Set[int] = Field(default_factory=set, exclude=True, repr=False)
     levels: List[int] = Field(default_factory=list)
     count: int = 0
-    input: Annotated[List[Spell], Field(exclude=False, repr=False)]
+    input: Annotated[List[Spell], Field(exclude=True, repr=False)]
     spells: Dict[int, List[Spell]] = Field(default=defaultdict(list))
     # todo: проверка что ключи являются валидными уровнями заклинаний
 
     @model_validator(mode='after')
-    def proceed_input(self) -> BaseModel:
+    def proceed_input(self) -> BaseModel:  # todo: очищать инпут после обработки данных, занимает просто память и все
         [self._add(s) for s in self.input if s not in self.spells[s.level]]
         self.levels = sorted(self.levels_)
         return self

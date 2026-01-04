@@ -33,12 +33,12 @@ class RepositoryInterface(ABC):
 
     @abstractmethod
     # todo: указать тип ParamsToGetSpellsAvailable у параметра
-    # todo: указать тип Spell у возвращаемого значения
-    def get_available_spells(self, class_info) -> list:
+    # todo: указать тип SpellAggregate у возвращаемого значения
+    def get_available_spells(self, class_info) -> dict:
         """
         Получение списка заклинаний, доступных для переданных параметров
         :param class_info: ParamsToGetSpellsAvailable
-        :return: List[Spell]
+        :return: SpellAggregate
         """
 
     # CRUD для персонажей

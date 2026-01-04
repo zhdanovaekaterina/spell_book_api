@@ -7,6 +7,7 @@
 import pytest
 
 from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.models.spell import Spell, SpellAggregate
 from tests.mock.params import params_available_for_class
 
 
@@ -14,4 +15,6 @@ from tests.mock.params import params_available_for_class
 def test_get_available_spells(full_db_spells, data, expected_spells):
     params = ParamsToGetSpellsAvailable(**data)
     spell_list = full_db_spells.get_available_spells(params)
-    assert expected_spells == [res.model_dump() for res in spell_list]
+
+    assert isinstance(spell_list, SpellAggregate)
+    assert SpellAggregate(input=[Spell(**e) for e in expected_spells]) == spell_list  # todo: слишком много тут работы с мок-данными, которая зависит от тестов агрегата

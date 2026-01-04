@@ -1,5 +1,3 @@
-from typing import List
-
 from dependency_injector.wiring import inject, Provide
 
 from app.core.base.service import Service
@@ -39,42 +37,42 @@ class CasterService(Service):
 
         self.repository.delete_caster(caster_id)
 
-    def level_up(self):
+    def level_up(self):  # todo: это должны быть методы домена Caster, они не имеют отношения к службе
         """
         Повышение уровня персонажа
         :return:
         """
         pass
 
-    def learn(self):
+    def learn(self):  # todo: и это
         """
         Изучение заклинаний
         :return:
         """
         pass
 
-    def prepare(self):
+    def prepare(self):  # todo: и это
         """
         Подготовка заклинаний
         :return:
         """
         pass
 
-    def get_learnt(self):
+    def get_learnt(self):  # todo: и это
         """
         Получение изученных заклинаний
         :return:
         """
         pass
 
-    def get_prepared(self):
+    def get_prepared(self):  # todo: и это
         """
         Получение подготовленных заклинаний
         :return:
         """
         pass
 
-    def get_cells(self):
+    def get_cells(self):  # todo: и это
         """
         Получить уровни и количество ячеек заклинаний
         :return:
@@ -82,13 +80,13 @@ class CasterService(Service):
         pass
 
     @inject
-    def get_available(self,
+    def get_available(self,  # todo: и это
                       caster_id: int,
                       info_service: Service = Provide['info_service']
-                      ) -> List[dict]:
+                      ) -> dict:
         """
         Получить доступные заклинания
-        :return: List[Spell]
+        :return: SpellAggregate
         :raise: NotFoundException - если персонаж не найден по id
         """
         caster = self.get(caster_id)
