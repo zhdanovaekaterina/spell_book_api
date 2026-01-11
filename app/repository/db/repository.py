@@ -91,9 +91,6 @@ class DbRepository(RepositoryInterface):
                 .order_by(Spell.level) \
                 .all()
 
-            for d in data:
-                print(d.__dict__)
-
             # маппинг
             return CoreSpellAggregate(input=[CoreSpell(**d.__dict__) for d in data])
 

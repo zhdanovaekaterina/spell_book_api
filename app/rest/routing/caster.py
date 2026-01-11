@@ -3,8 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
-from app.core import CasterService
-from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto, SpellDto
+from app.core import CasterService, SpellAggregate
+from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
 
 
 router = APIRouter(prefix='/caster', tags=["Caster"])
@@ -85,7 +85,7 @@ def delete_caster(
 @router.get(
     "/{caster_id}/spells/available",
     status_code=status.HTTP_200_OK,
-    response_model=List[SpellDto],  # todo: заменить на объект коллекции заклинаний
+    response_model=SpellAggregate,
     responses={
         status.HTTP_404_NOT_FOUND: {
             'model': ExcDto

@@ -11,9 +11,21 @@ class MockCasterService():
     def get_available(self, caster_id, **data) -> List[dict]:
 
         if caster_id == 1:
-            return [
-                {'id': 1, 'alias': 'spell1', 'title': 'some_spell_title_to_check', 'level': 1},
-                {'id': 2, 'alias': 'spell2', 'title': 'spell_wizard_1lvl2', 'level': 1},
-            ]
+            return {
+                "levels": [
+                    0
+                ],
+                "count": 1,
+                "spells": {
+                    "0": [
+                        {
+                            "id": 1,
+                            "alias": "some_spell",
+                            "title": "Заклинание",
+                            "level": 0
+                        }
+                    ]
+                }
+            }
         else:
             raise NotFoundException
