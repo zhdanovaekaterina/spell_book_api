@@ -47,7 +47,7 @@ def create_caster(
 
 
 @router.get(
-    '/{caster_id}',
+    '/{id}',
     summary="Получение персонажа",
     description="Возвращает информацию о персонаже по его id",
     status_code=status.HTTP_200_OK,
@@ -60,15 +60,15 @@ def create_caster(
 )
 @inject
 def get_caster(
-    caster_id: int,
+    id: int,
     service: CasterService = Depends(Provide['caster_service']),
 ):
-    caster = service.get(caster_id)
+    caster = service.get(id)
     return CasterDto(**caster)
 
 
 @router.delete(
-    '/{caster_id}',
+    '/{id}',
     summary="Удаление персонажа",
     description="Удаляет персонажа по его id",
     status_code=status.HTTP_200_OK,
@@ -81,15 +81,15 @@ def get_caster(
 )
 @inject
 def delete_caster(
-    caster_id: int,
+    id: int,
     service: CasterService = Depends(Provide['caster_service']),
 ):
-    service.delete(caster_id)
+    service.delete(id)
     return OkDto()
 
 
 @router.get(
-    "/{caster_id}/spells/available",
+    "/{id}/spells/available",
     summary="Получение доступных заклинаний для персонажа",
     description="Возвращает общий список доступных заклинаний для конкретного персонажа по его id, " \
         "с пометкой, если какое-либо уже изучено или подготовлено.",
@@ -103,98 +103,98 @@ def delete_caster(
 )
 @inject
 def get_spells_available(
-    caster_id: int,
+    id: int,
     service: CasterService = Depends(Provide['caster_service']),
     # todo: добавить флаг (only_new), при передаче которого будут выводиться только те заклинания, которые еще не изучены/не подготовлены
 ):
-    return service.get_available(caster_id)
+    return service.get_available(id)
 
 
 @router.get(
-    "/{caster_id}/spells/learn",
+    "/{id}/spells/learn",
     summary="Заклинания для изучения",
     description="Возвращает доступные персонажу заклинания за вычетом уже изученных. " \
         "Для классов, которые не изучают заклинания, возвращает 405 Method Not Allowed",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_learn(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.post(
-    "/{caster_id}/spells/learn",
+    "/{id}/spells/learn",
     summary="Изучение заклинаний",
     description="Фиксирует заклинания как изученные данным персонажем. " \
         "Для классов, которые не изучают заклинания, возвращает 405 Method Not Allowed",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def post_spells_learn(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.get(
-    "/{caster_id}/spells/prepare",
+    "/{id}/spells/prepare",
     summary="Заклинания для подготовки",
     description="Возвращает заклинания, доступные персонажу для подготовки. " \
         "Для классов, которые не готовят заклинания, возвращает 405 Method Not Allowed",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_prepare(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.post(
-    "/{caster_id}/spells/prepare",
+    "/{id}/spells/prepare",
     summary="Подготовка заклинаний",
     description="Фиксирует заклинания как подготовленные данным персонажем. " \
         "Для классов, которые не изучают заклинания, возвращает 405 Method Not Allowed",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def post_spells_prepare(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.get(
-    "/{caster_id}/spells/use",
+    "/{id}/spells/use",
     summary="Заклинания для использования",
     description="Возвращает заклинания, доступные персонажу для использования. " \
         "В этот список будут входить те заклинания, которые изучены и/или подготовлены, в зависимости от класса",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_use(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.get(
-    '/{caster_id}/spells/count',
+    '/{id}/spells/count',
     summary="Получение количества заклинаний",
     description="Возвращает информацию по количеству доступных заклинаний для подготовки или/и изучения. " \
         "Отдельно выводится общее количество и отдельно доступное с учетом уже изученных/подготовленных заклинаний",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_count(
-    caster_id: int
+    id: int
 ):
     ...
 
 
 @router.get(
-    '/{caster_id}/cells',
+    '/{id}/cells',
     summary="Получение доступных ячеек заклинаний для персонажа",
     description="Возвращает количество и уровни доступных ячеек для конкретного персонажа",
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_cells(
-    caster_id: int
+    id: int
 ):
     ...
