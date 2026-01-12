@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
@@ -32,3 +30,16 @@ def get_spells_available(
 ):
 
     return service.get_available(alias=alias, subclass=subclass, level=level)
+
+
+@router.get(
+    '/cells',
+    summary="Получение доступных ячеек заклинаний",
+    description="Возвращает количество и уровни доступных ячеек для одного класса указанного уровня",
+    status_code=status.HTTP_501_NOT_IMPLEMENTED
+)
+def get_cells(
+    alias: str,
+    level: int = MAX_CASTER_LEVEL
+):
+    ...
