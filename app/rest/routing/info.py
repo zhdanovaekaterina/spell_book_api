@@ -13,6 +13,8 @@ router = APIRouter(prefix='/info', tags=["Info"])
 
 @router.get(
     '/spells/available',
+    summary="Получение доступных заклинаний",
+    description="Возвращает весь список доступных заклинаний по переданным параметрам",
     status_code=status.HTTP_200_OK,
     response_model=SpellAggregate,
     responses={

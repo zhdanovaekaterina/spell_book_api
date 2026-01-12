@@ -12,6 +12,8 @@ router = APIRouter(prefix='/caster', tags=["Caster"])
 
 @router.post(
     '/create',
+    summary="Создание персонажа",
+    description="Создает персонажа первого уровня",
     status_code=status.HTTP_201_CREATED,
     response_model=IdDto,
     responses={
@@ -46,6 +48,8 @@ def create_caster(
 
 @router.get(
     '/{caster_id}',
+    summary="Получение персонажа",
+    description="Возвращает информацию о персонаже по его id",
     status_code=status.HTTP_200_OK,
     response_model=CasterDto,
     responses={
@@ -65,6 +69,8 @@ def get_caster(
 
 @router.delete(
     '/{caster_id}',
+    summary="Удаление персонажа",
+    description="Удаляет персонажа по его id",
     status_code=status.HTTP_200_OK,
     response_model=OkDto,
     responses={
@@ -84,6 +90,8 @@ def delete_caster(
 
 @router.get(
     "/{caster_id}/spells/available",
+    summary="Получение доступных заклинаний для персонажа",
+    description="Возвращает список доступных заклинаний для конкретного персонажа по его id",
     status_code=status.HTTP_200_OK,
     response_model=SpellAggregate,
     responses={
