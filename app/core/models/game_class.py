@@ -102,3 +102,34 @@ class ParamsToGetSpellsAvailable(GameClass):
                 )
 
         return self
+
+
+class ParamsToGetCellsAvailable(GameClass):
+    """
+    Параметры для получения уровней и количества доступных ячеек
+    """
+
+    # когда получаем ячейки, ожидаем уровень как обязательный параметр
+    level: int
+    # todo: возможно тут стоит удалить атрибут subclass, но тогда поломается логика наследования, поэтому пусть будет None
+
+    @model_validator(mode='after')
+    @inject
+    def valid_model(self,
+                    repo: RepositoryInterface = Provide['repository']
+                    ) -> BaseModel:
+
+        # Проверяем валидно введенный класс - пробуем получить его из базы
+        try:
+            repo.get_one_class(self.alias)
+
+        except KeyError:
+            raise PydanticCustomError(
+                CoreExcType.INVALID_CLASS.value,
+                "invalid class '{class}' provided",
+                {'class': self.alias}
+            )
+        
+        # здесь подкласс вообще не передается, поэтому дальше ничего не проверяем
+        
+        return self

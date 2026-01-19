@@ -1,5 +1,5 @@
 from app.core.base.service import Service
-from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.models.game_class import ParamsToGetSpellsAvailable, ParamsToGetCellsAvailable
 
 
 class InfoService(Service):
@@ -14,8 +14,7 @@ class InfoService(Service):
         """
 
         info = ParamsToGetSpellsAvailable(**data)
-        spells = self.repository.get_available_spells(info)
-        return spells
+        return self.repository.get_available_spells(info)
 
     def get_game_classes(self):
         """
@@ -29,9 +28,11 @@ class InfoService(Service):
         """
         pass
 
-    def get_cells(self):
+    def get_cells(self, **data) -> dict:
         """
         Получить доступные ячейки
-        :return:
+        :return: CellAggregate
         """
-        pass
+
+        params = ParamsToGetCellsAvailable(**data)
+        return self.repository.get_cells(params)

@@ -41,6 +41,14 @@ class RepositoryInterface(ABC):
         :return: SpellAggregate
         """
 
+    @abstractmethod
+    def get_cells(self, class_info) -> dict:
+        """
+        Получение количества и уровней ячеек заклинаний для класса и уровня
+        :param class_info: ParamsToGetCellsAvailable
+        :return: CellAggregate
+        """
+
     # CRUD для персонажей
 
     @abstractmethod

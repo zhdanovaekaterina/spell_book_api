@@ -127,6 +127,9 @@ class DbRepository(RepositoryInterface):
 
         return True
 
+    def get_cells(self, class_info) -> dict:
+        ...
+
     @staticmethod
     def _parse_class_to_out(data) -> GameClassInfo:
         """

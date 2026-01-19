@@ -26,7 +26,7 @@ def caster_service(container):
 
     container.wire(modules=[
         'app.core.models.game_class',
-        'app.core.services.caster'
+        'app.core.services.caster',
     ])
 
     container.info_service.override(MockInfoService())
@@ -39,5 +39,10 @@ def info_service(container):
     Создание инфо-службы
     :return:
     """
+
+    container.wire(modules=[
+        'app.core.models.game_class',
+        'app.core.services.info',
+    ])
 
     return container.info_service()

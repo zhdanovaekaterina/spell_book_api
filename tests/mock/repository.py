@@ -3,6 +3,7 @@ from typing import List
 from app.core import NotFoundException
 from app.core.models.const import MAX_CASTER_LEVEL
 from app.core.models.spell import Spell, SpellAggregate
+from app.core.models.cell import CellAggregate
 from app.core.models.game_class import ParamsToGetSpellsAvailable
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
@@ -105,6 +106,19 @@ class MockRepository(RepositoryInterface):
             self.caster.pop(index)
         else:
             raise NotFoundException
+
+    def get_cells(self, class_info) -> dict:
+
+        if class_info.alias == "wizard":
+            if class_info.level == 1:
+                return CellAggregate({1: 2})
+            elif class_info.level == 10:
+                return CellAggregate({1: 4, 2: 3, 3: 3, 4: 3, 5: 2})
+        elif class_info.alias == "ranger":
+            if class_info.level == 1:
+                return CellAggregate({})
+            elif class_info.level == 10:
+                return CellAggregate({1: 4, 2: 3, 3: 2})
 
     @staticmethod
     def _get_key_from_dict(dict_data: dict) -> str:
