@@ -17,4 +17,4 @@ def test_get_cells(info_service, data, expected_cells):
 
     cells = info_service.get_cells(**data)
     assert isinstance(cells, CellAggregate)
-    assert cells == expected_cells
+    assert cells.data == expected_cells

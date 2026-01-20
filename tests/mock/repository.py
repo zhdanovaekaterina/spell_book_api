@@ -109,16 +109,24 @@ class MockRepository(RepositoryInterface):
 
     def get_cells(self, class_info) -> dict:
 
+        data = CellAggregate()
+        
         if class_info.alias == "wizard":
             if class_info.level == 1:
-                return CellAggregate({1: 2})
+                data[1] += 2
             elif class_info.level == 10:
-                return CellAggregate({1: 4, 2: 3, 3: 3, 4: 3, 5: 2})
+                data[1] += 4
+                data[2] += 3
+                data[3] += 3
+                data[4] += 3
+                data[5] += 2
         elif class_info.alias == "ranger":
-            if class_info.level == 1:
-                return CellAggregate({})
-            elif class_info.level == 10:
-                return CellAggregate({1: 4, 2: 3, 3: 2})
+            if class_info.level == 10:
+                data[1] += 4
+                data[2] += 3
+                data[3] += 2
+        
+        return data
 
     @staticmethod
     def _get_key_from_dict(dict_data: dict) -> str:
