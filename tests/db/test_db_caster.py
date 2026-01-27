@@ -16,7 +16,7 @@ from app.repository.db.models import Caster as DbCaster, CasterClass as DbCaster
 @pytest.mark.dependency(scope="session",
                         name="save_caster",
                         depends=["tests/db/test_db_class.py::test_one_class"])
-def test_save_caster(full_db):
+def test_save_caster(mock_db):
     data = {
         'name': 'Player1',
         'classes': [{
@@ -30,45 +30,45 @@ def test_save_caster(full_db):
     }
 
     caster = CoreCaster(**data)
-    caster_id = full_db.add_caster(caster)  # act
+    caster_id = mock_db.add_caster(caster)  # act
     assert type(caster_id) is int
     assert caster_id == 1
 
-    with full_db.session:
-        rows_count = full_db.session.query(DbCaster.id).count()
+    with mock_db.session:
+        rows_count = mock_db.session.query(DbCaster.id).count()
         assert rows_count == 1
 
-        caster_from_db = full_db.session.query(DbCaster).one()
+        caster_from_db = mock_db.session.query(DbCaster).one()
         assert caster_from_db.name == data.get('name')
         assert caster_from_db.caster_class[0].class_alias\
             == data.get('classes')[0].get('alias')
 
 
 @pytest.mark.dependency(name="get_caster", depends=["save_caster"])
-def test_get_caster(full_db):
-    caster = full_db.get_caster(1)  # act
+def test_get_caster(mock_db):
+    caster = mock_db.get_caster(1)  # act
     assert type(caster) is CoreCaster
     assert caster.name == 'Player1'
     assert caster.classes[0].alias == 'wizard'
 
 
 @pytest.mark.dependency(name="get_caster_non_exist", depends=["save_caster"])
-def test_get_caster_non_exist(full_db):
+def test_get_caster_non_exist(mock_db):
     with pytest.raises(NotFoundException):
-        full_db.get_caster(2)  # act - пытаемся получить несуществующую запись
+        mock_db.get_caster(2)  # act - пытаемся получить несуществующую запись
 
 
 @pytest.mark.dependency(depends=["save_caster", "get_caster_non_exist"])
-def test_delete_caster(full_db):
-    full_db.delete_caster(1)  # act
+def test_delete_caster(mock_db):
+    mock_db.delete_caster(1)  # act
     with pytest.raises(NotFoundException):
-        full_db.get_caster(1)  # если удаление успешно, получение выкинет ошибку
+        mock_db.get_caster(1)  # если удаление успешно, получение выкинет ошибку
 
-    with full_db.session:  # убедимся что связанная таблица также очищена
-        rows_count = full_db.session.query(DbCasterClass.id).count()
+    with mock_db.session:  # убедимся что связанная таблица также очищена
+        rows_count = mock_db.session.query(DbCasterClass.id).count()
         assert rows_count == 0
 
 
-def test_delete_caster_non_exist(full_db):
+def test_delete_caster_non_exist(mock_db):
     with pytest.raises(NotFoundException):
-        full_db.delete_caster(2)  # act - пытаемся удалить несуществующую запись
+        mock_db.delete_caster(2)  # act - пытаемся удалить несуществующую запись

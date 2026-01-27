@@ -2,18 +2,16 @@ import pytest
 from sqlalchemy import event
 
 from app.di import Container
-from app.repository.db.models import Base, GameClass, GameSubclass, GameClassType, Spell, SpellAvailability
-from tests.db.params import (game_class_table_data, game_subclass_table_data,
-                             game_class_type_table_data, spell_table_data,
-                             spell_available_data)
+from app.repository.db.models import Base
 
 
 @pytest.fixture(scope='module')
-def clean_db():
+def mock_db():
     """
-    Возвращает пустую in-memory БД с инициализированной схемой
+    Возвращает in-memory БД с инициализированной схемой, заполненную тестовыми данными
     """
 
+    # инициализируем базу
     container = Container()
     container.config.from_dict({
         'db': {
@@ -27,59 +25,21 @@ def clean_db():
 
     db = container.repository()
 
+    # включаем поддержку внешних ключей для sqlite
     @event.listens_for(db.engine, "connect")
     def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON;")
         cursor.close()
 
-    db.registry.metadata.create_all(db.engine)  # Создание таблиц
+    # создаем таблицы
+    db.registry.metadata.create_all(db.engine)
+
+    # наполняем БД мок-данными
+    with open("tests/db/init.sql", "r") as file:
+        data = file.read()
+
+    with db.engine.begin() as conn:
+        conn.connection.executescript(data)
 
     return db
-
-
-@pytest.fixture(scope='module')
-def full_db(clean_db):
-    """
-    Заполняет базу тестовыми данными
-    :return:
-    """
-
-    game_class_type_obj_list = [GameClassType(**d) for d in game_class_type_table_data]
-    game_class_obj_list = [GameClass(**d) for d in game_class_table_data]
-    game_subclass_obj_list\
-        = [GameSubclass(**d) for d in game_subclass_table_data]
-
-    with clean_db.session as session:
-        with session.begin():
-            session.bulk_save_objects(game_class_type_obj_list)
-            session.bulk_save_objects(game_class_obj_list)
-            session.bulk_save_objects(game_subclass_obj_list)
-
-    return clean_db
-
-
-@pytest.fixture(scope='module')
-def full_db_spells(full_db):
-    """
-    Добавляет тестовые заклинания в базу
-    :return:
-    """
-
-    spell_obj_list = [Spell(**d) for d in spell_table_data]
-
-    spell_available_obj_list = []
-    for cls in spell_available_data:
-        for spell in cls.get('spells'):
-            spell_available_obj_list.append(SpellAvailability(
-                spell_id=spell,
-                class_alias=cls.get('class'),
-                subclass_alias=cls.get('subclass')
-            ))
-
-    with full_db.session as session:
-        with session.begin():
-            session.bulk_save_objects(spell_obj_list)
-            session.bulk_save_objects(spell_available_obj_list)
-
-    return full_db
