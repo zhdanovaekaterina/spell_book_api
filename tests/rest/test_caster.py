@@ -142,8 +142,6 @@ def test_delete_non_existing(client):
 
 # здесь и далее в тестах используем мок-службу кастера, чтобы не эмулировать всю цепочку
 # с созданием кастера и связями с заклинаниями и снизить зависимость от служб
-# todo: после ввода агрегата заклинаний тест сломался на первой строчке, неплохо бы его починить
-@pytest.mark.xfail
 def test_get_available_spells(client_mocked_caster_service):
 
     response = client_mocked_caster_service.get("/caster/1/spells/available")
