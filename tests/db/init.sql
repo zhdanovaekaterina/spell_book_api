@@ -1,10 +1,17 @@
 INSERT INTO d_game_class_type (alias,class_level,cell_level,cell_add_amount) VALUES
 	 ('full',1,1,2),
 	 ('full',5,3,2),
+	 ('full',10,1,2),
+	 ('full',10,2,3),
+	 ('full',10,3,1),
+	 ('full',10,4,3),
+	 ('full',10,5,2),
 	 ('full',17,9,1),
 	 ('half',2,1,2),
 	 ('half',5,2,2),
-	 ('half',9,3,2);
+	 ('half',9,3,2),
+	 ('half',10,1,2),
+	 ('half',10,2,1);
 INSERT INTO d_class (alias,title,choose_subclass_level,"type") VALUES
 	 ('wizard','Волшебник',2,'full'),
 	 ('cleric','Жрец',1,'full'),

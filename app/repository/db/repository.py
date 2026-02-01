@@ -1,7 +1,7 @@
 from typing import List
 from os import environ
 
-from sqlalchemy import create_engine, and_, or_
+from sqlalchemy import create_engine, and_, or_, select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.sql.expression import func
@@ -10,6 +10,7 @@ from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
 from app.core.models.spell import SpellAggregate as CoreSpellAggregate, Spell as CoreSpell
 from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.models.cell import CellAggregate
 from app.core.interfaces.dto import GameClassInfo
 from app.core.interfaces.repository import RepositoryInterface
 from app.repository.db.models import (GameClass, GameSubclass,
@@ -128,7 +129,23 @@ class DbRepository(RepositoryInterface):
         return True
 
     def get_cells(self, class_info) -> dict:
-        ...
+
+        with self.session:
+            subq = select(GameClass.type).where(GameClass.alias == class_info.alias).scalar_subquery()
+            where_condition = and_(
+                GameClassType.class_level <= class_info.level,
+                GameClassType.alias == subq
+            )
+
+            data = self.session\
+                .query(GameClassType.cell_level, func.sum(GameClassType.cell_add_amount))\
+                .where(where_condition)\
+                .group_by(GameClassType.cell_level)\
+                .having(func.sum(GameClassType.cell_add_amount) > 0)\
+                .order_by(GameClassType.cell_level)\
+                .all()
+            
+            return CellAggregate(data)
 
     @staticmethod
     def _parse_class_to_out(data) -> GameClassInfo:
