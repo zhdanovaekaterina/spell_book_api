@@ -36,10 +36,20 @@ def get_spells_available(
     '/cells',
     summary="Получение доступных ячеек заклинаний",
     description="Возвращает количество и уровни доступных ячеек для одного класса указанного уровня",
-    status_code=status.HTTP_501_NOT_IMPLEMENTED
+    status_code=status.HTTP_200_OK,
+    response_model=dict,  # CellAggregate не наследует BaseModel, поэтому тут нельзя его использовать
+    responses={
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            'model': ExcDto
+        },
+    }
 )
+@inject
 def get_cells(
     alias: str,
-    level: int = MAX_CASTER_LEVEL
+    level: int = MAX_CASTER_LEVEL,
+    service: InfoService = Depends(Provide['info_service']),
 ):
-    ...
+
+    cells = service.get_cells(alias=alias, level=level)
+    return cells.data
