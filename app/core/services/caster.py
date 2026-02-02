@@ -72,12 +72,20 @@ class CasterService(Service):
         """
         pass
 
-    def get_cells(self):  # todo: и это
+    def get_cells(self,  # todo: и это
+                  caster_id: int,
+                  info_service: Service = Provide['info_service']
+                  ) -> dict:
         """
         Получить уровни и количество ячеек заклинаний
-        :return:
+        :return: CellAggregate
+        :raise: NotFoundException - если персонаж не найден по id
         """
-        pass
+        caster = self.get(caster_id)
+        alias = caster.get("classes")[0].get("alias")  # todo: пока что это все расчитано только на 1 класс
+        level = caster.get("classes")[0].get("level")
+
+        return info_service.get_cells(alias=alias, level=level)
 
     @inject
     def get_available(self,  # todo: и это

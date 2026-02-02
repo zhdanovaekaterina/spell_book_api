@@ -3,4 +3,5 @@
 .config/.env
 .config/.env.test
 .coverage
+.vscode
 __pycache__

@@ -14,3 +14,7 @@ class MockInfoService():
             return [
                 {'id': 1, 'alias': 'spell1', 'title': 'spell_wizard_1lvl', 'level': 1},
             ]
+
+    def get_cells(self, **data):
+        if data.get("alias") == "wizard" and data.get("level") == 1:
+            return {1: 2}
