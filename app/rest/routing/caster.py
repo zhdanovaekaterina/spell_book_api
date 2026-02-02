@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
@@ -192,9 +190,17 @@ def get_spells_count(
     '/{id}/cells',
     summary="Получение доступных ячеек заклинаний для персонажа",
     description="Возвращает количество и уровни доступных ячеек для конкретного персонажа",
-    status_code=status.HTTP_501_NOT_IMPLEMENTED
+    status_code=status.HTTP_200_OK,
+    response_model=dict,  # CellAggregate тут не работает, потому что не является наследником BaseModel
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            'model': ExcDto
+        },
+    }
 )
+@inject
 def get_cells(
-    id: int
+    id: int,
+    service: CasterService = Depends(Provide['caster_service']),
 ):
-    ...
+    return service.get_cells(id)

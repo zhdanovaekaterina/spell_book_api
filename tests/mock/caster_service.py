@@ -29,3 +29,8 @@ class MockCasterService():
             }
         else:
             raise NotFoundException
+
+    def get_cells(self, caster_id) -> dict:
+
+        if caster_id == 2:
+            return {1: 2}

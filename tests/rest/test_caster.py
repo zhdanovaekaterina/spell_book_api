@@ -158,3 +158,12 @@ def test_get_available_spells_from_invalid_caster(client_mocked_caster_service):
 
     response = client_mocked_caster_service.get("/caster/2/spells/available")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_get_cells(client_mocked_caster_service):
+
+    response = client_mocked_caster_service.get("/caster/2/cells")
+    assert response.status_code == status.HTTP_200_OK
+
+    response_json = response.json()
+    assert response_json == {"1": 2}
