@@ -1,5 +1,6 @@
 services:
   app:
+    user: "${LOCAL_UID}:${LOCAL_GID}"
     build:
       dockerfile: .docker/dev.dockerfile
     image: zhdanovaekaterina/spell_book_api:dev

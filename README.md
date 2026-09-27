@@ -21,18 +21,12 @@ nano .config/.env.test  # конфиг для тестового окружен�
 docker compose up --build -d  # если есть образ, флаг --build не нужен
 ```
 
-4. Выдаем права директории с миграциями
-
+4. Актуализируем базу
 ```shell
-sudo chmod -R 777 app/repository/db/migrations/versions
+docker compose --env-file .config/.env run app alembic upgrade head
 ```
 
-5. Актуализируем базу
-```shell
-docker compose run app alembic upgrade head
-```
-
-6. Копируем хуки для гита и выдаем права
+5. Копируем хуки для гита и выдаем права
 ```shell
 cp -r .config/git-hooks/. .git/hooks/
 chmod -R 755 .git/hooks/
@@ -64,7 +58,7 @@ pytest --cov=app
 
 Генерация новой миграции проводится через контейнер app
 ```shell
-docker compose run app alembic revision --autogenerate -m 'migration_name'
+docker compose --env-file .config/.env run app alembic revision --autogenerate -m 'migration_name'
 ```
 
 После генерации файл необходимо добавить под git
