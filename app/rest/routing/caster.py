@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
-from app.core import CasterService
+from app.core import CasterService, SpellAggregate
 from app.core.models.ids import CasterId
 from app.rest.dto import CasterCreateInDto, CasterIdDto, ExcDto, CasterDto, OkDto
 
@@ -93,7 +93,7 @@ def delete_caster(
     description="Возвращает общий список доступных заклинаний для конкретного персонажа по его id, " \
         "с пометкой, если какое-либо уже изучено или подготовлено.",
     status_code=status.HTTP_200_OK,
-    response_model=dict,  # SpellAggregate тут не работает, потому что возвращается насквозь из ядра и повторная валидация не нужна
+    response_model=SpellAggregate,
     responses={
         status.HTTP_404_NOT_FOUND: {
             'model': ExcDto
@@ -204,4 +204,7 @@ def get_cells(
     id: CasterId,
     service: CasterService = Depends(Provide['caster_service']),
 ):
+
+    print(f"in get_cells: {service.get_cells(id)}")  # todo: убрать после отладки
+    
     return service.get_cells(id)

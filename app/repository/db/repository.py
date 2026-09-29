@@ -145,6 +145,8 @@ class DbRepository(RepositoryInterface):
                 .having(func.sum(GameClassType.cell_add_amount) > 0)\
                 .order_by(GameClassType.cell_level)\
                 .all()
+
+            print(CellAggregate(data))  # todo: убрать после отладки
             
             return CellAggregate(data)
 

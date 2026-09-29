@@ -86,6 +86,8 @@ class CasterService(Service):
         alias = caster.get("classes")[0].get("alias")  # todo: пока что это все расчитано только на 1 класс
         level = caster.get("classes")[0].get("level")
 
+        print(f"info_service: {info_service.get_cells(alias=alias, level=level)}")  # todo: убрать после отладки
+
         return info_service.get_cells(alias=alias, level=level)
 
     @inject
