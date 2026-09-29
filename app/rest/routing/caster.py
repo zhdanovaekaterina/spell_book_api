@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
 from app.core import CasterService
-from app.rest.dto import CasterCreateInDto, IdDto, ExcDto, CasterDto, OkDto
+from app.core.models.ids import CasterId
+from app.rest.dto import CasterCreateInDto, CasterIdDto, ExcDto, CasterDto, OkDto
 
 
 router = APIRouter(prefix='/caster', tags=["Caster"])
@@ -13,7 +14,7 @@ router = APIRouter(prefix='/caster', tags=["Caster"])
     summary="Создание персонажа",
     description="Создает персонажа первого уровня",
     status_code=status.HTTP_201_CREATED,
-    response_model=IdDto,
+    response_model=CasterIdDto,
     responses={
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
             'model': ExcDto
@@ -41,7 +42,7 @@ def create_caster(
     }
 
     caster_id = service.create(**data)
-    return IdDto(id=caster_id)
+    return CasterIdDto(id=caster_id)
 
 
 @router.get(
@@ -58,7 +59,7 @@ def create_caster(
 )
 @inject
 def get_caster(
-    id: int,
+    id: CasterId,
     service: CasterService = Depends(Provide['caster_service']),
 ):
     caster = service.get(id)
@@ -79,7 +80,7 @@ def get_caster(
 )
 @inject
 def delete_caster(
-    id: int,
+    id: CasterId,
     service: CasterService = Depends(Provide['caster_service']),
 ):
     service.delete(id)
@@ -101,7 +102,7 @@ def delete_caster(
 )
 @inject
 def get_spells_available(
-    id: int,
+    id: CasterId,
     service: CasterService = Depends(Provide['caster_service']),
     # todo: добавить флаг (only_new), при передаче которого будут выводиться только те заклинания, которые еще не изучены/не подготовлены
 ):
@@ -116,7 +117,7 @@ def get_spells_available(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_learn(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -129,7 +130,7 @@ def get_spells_learn(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def post_spells_learn(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -142,7 +143,7 @@ def post_spells_learn(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_prepare(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -155,7 +156,7 @@ def get_spells_prepare(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def post_spells_prepare(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -168,7 +169,7 @@ def post_spells_prepare(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_use(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -181,7 +182,7 @@ def get_spells_use(
     status_code=status.HTTP_501_NOT_IMPLEMENTED
 )
 def get_spells_count(
-    id: int
+    id: CasterId,
 ):
     ...
 
@@ -200,7 +201,7 @@ def get_spells_count(
 )
 @inject
 def get_cells(
-    id: int,
+    id: CasterId,
     service: CasterService = Depends(Provide['caster_service']),
 ):
     return service.get_cells(id)

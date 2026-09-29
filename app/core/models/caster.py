@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, model_validator
 
 from app.core.models.game_class import GameClass
+from app.core.models.ids import CasterId
 from app.core.models.stats import Stats
 
 
@@ -11,7 +12,7 @@ class Caster(BaseModel):
     Модель заклинателя
     """
 
-    id: Optional[int] = None
+    id: Optional[CasterId] = None
     name: str = Field(frozen=True)
     classes: list[GameClass]
     stats: Stats

@@ -5,6 +5,7 @@ from app.core.models.const import MAX_CASTER_LEVEL
 from app.core.models.spell import Spell, SpellAggregate
 from app.core.models.cell import CellAggregate
 from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.models.ids import CasterId
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
 from tests.mock.params import params_available_for_class
@@ -78,12 +79,12 @@ class MockRepository(RepositoryInterface):
         spells_raw = self.spell_to_class.get(key, [])
         return SpellAggregate(input=spells_raw)
 
-    def add_caster(self, data) -> int:
-        data.id = len(self.caster) + 1
+    def add_caster(self, data) -> CasterId:
+        data.id = CasterId(len(self.caster) + 1)
         self.caster.append(data)
         return data.id
 
-    def get_caster(self, caster_id: int):
+    def get_caster(self, caster_id: CasterId):
 
         index = None
         for num, caster in enumerate(self.caster):
@@ -95,7 +96,7 @@ class MockRepository(RepositoryInterface):
         else:
             raise NotFoundException
 
-    def delete_caster(self, caster_id: int) -> None:
+    def delete_caster(self, caster_id: CasterId) -> None:
 
         index = None
         for num, caster in enumerate(self.caster):

@@ -5,6 +5,7 @@ from collections import defaultdict
 from pydantic import BaseModel, Field, model_validator
 
 from app.core.models.const import MIN_SPELL_LEVEL, MAX_SPELL_LEVEL
+from app.core.models.ids import SpellId
 
 
 class Spell(BaseModel):
@@ -12,7 +13,7 @@ class Spell(BaseModel):
     Модель заклинания
     """
 
-    id: int
+    id: SpellId
     alias: str
     title: str
     level: int = Field(default=1, ge=MIN_SPELL_LEVEL, le=MAX_SPELL_LEVEL)

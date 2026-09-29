@@ -8,6 +8,7 @@ from sqlalchemy.sql.expression import func
 
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
+from app.core.models.ids import CasterId
 from app.core.models.spell import SpellAggregate as CoreSpellAggregate, Spell as CoreSpell
 from app.core.models.game_class import ParamsToGetSpellsAvailable
 from app.core.models.cell import CellAggregate
@@ -95,16 +96,16 @@ class DbRepository(RepositoryInterface):
             # маппинг
             return CoreSpellAggregate(input=[CoreSpell(**d.__dict__) for d in data])
 
-    def add_caster(self, data) -> int:
+    def add_caster(self, data) -> CasterId:
         model = self._parse_model_to_in(data)
 
         with Session(self.engine) as session:
             with session.begin():
                 session.add(model)
                 session.flush()
-                return model.id
+                return CasterId(model.id)
 
-    def get_caster(self, caster_id: int):
+    def get_caster(self, caster_id: CasterId):
         with self.session:
             try:
                 data = self.session\
@@ -116,7 +117,7 @@ class DbRepository(RepositoryInterface):
 
             return self._parse_in_to_model(data)
 
-    def delete_caster(self, caster_id: int) -> bool:
+    def delete_caster(self, caster_id: CasterId) -> bool:
         with Session(self.engine) as session:
             with session.begin():
                 deleted_rows = session.query(DbCaster)\

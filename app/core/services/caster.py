@@ -2,6 +2,7 @@ from dependency_injector.wiring import inject, Provide
 
 from app.core.base.service import Service
 from app.core.models.caster import Caster
+from app.core.models.ids import CasterId
 
 
 class CasterService(Service):
@@ -9,7 +10,7 @@ class CasterService(Service):
     Служба для работы с заклинателями
     """
 
-    def create(self, **data: dict) -> int:
+    def create(self, **data: dict) -> CasterId:
         """
         Создание нового персонажа
         :return: id персонажа
@@ -18,7 +19,7 @@ class CasterService(Service):
         caster = Caster(**data)
         return self.repository.add_caster(caster)
 
-    def get(self, caster_id: int) -> dict:
+    def get(self, caster_id: CasterId) -> dict:
         """
         Получение информации о персонаже по его id
         :return: словарь с данными персонажа
@@ -28,7 +29,7 @@ class CasterService(Service):
         caster = self.repository.get_caster(caster_id)
         return caster.model_dump()
 
-    def delete(self, caster_id: int) -> None:
+    def delete(self, caster_id: CasterId) -> None:
         """
         Удаление персонажа по его id
         :return:
@@ -73,7 +74,7 @@ class CasterService(Service):
         pass
 
     def get_cells(self,  # todo: и это
-                  caster_id: int,
+                  caster_id: CasterId,
                   info_service: Service = Provide['info_service']
                   ) -> dict:
         """
@@ -89,7 +90,7 @@ class CasterService(Service):
 
     @inject
     def get_available(self,  # todo: и это
-                      caster_id: int,
+                      caster_id: CasterId,
                       info_service: Service = Provide['info_service']
                       ) -> dict:
         """

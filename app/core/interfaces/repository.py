@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from app.core.interfaces.dto import GameClassInfo
+from app.core.models.ids import CasterId
 
 
 class RepositoryInterface(ABC):
@@ -53,7 +54,7 @@ class RepositoryInterface(ABC):
 
     @abstractmethod
     # todo: указать тип Caster у даты и разобраться с циклическими импортами
-    def add_caster(self, data) -> int:
+    def add_caster(self, data) -> CasterId:
         """
         Добавление нового персонажа
         :param data: Caster - модель персонажа
@@ -62,7 +63,7 @@ class RepositoryInterface(ABC):
 
     @abstractmethod
     # todo: указать тип Caster у возвращаемого значения
-    def get_caster(self, caster_id: int):
+    def get_caster(self, caster_id: CasterId):
         """
         Получение персонажа по id
         :param caster_id:
@@ -71,7 +72,7 @@ class RepositoryInterface(ABC):
         """
 
     @abstractmethod
-    def delete_caster(self, caster_id: int) -> bool:
+    def delete_caster(self, caster_id: CasterId) -> bool:
         """
         Удаление персонажа по id
         :param caster_id:

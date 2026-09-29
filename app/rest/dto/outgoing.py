@@ -3,6 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 from app.core import CasterModel
+from app.core.models.ids import CasterId
 
 
 class ExcDataDto(BaseModel):
@@ -18,9 +19,8 @@ class OkDto(BaseModel):
     detail: str = 'OK'
 
 
-class IdDto(BaseModel):
+class CasterIdDto(BaseModel):
     id: int
-
 
 class CasterDto(CasterModel):  # здесь обязательно должен возвращаться id
-    id: int
+    id: CasterId
