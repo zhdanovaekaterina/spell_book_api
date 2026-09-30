@@ -1,6 +1,7 @@
-from sqlalchemy import String, Column, ForeignKey, SmallInteger, Integer
+from sqlalchemy import String, Column, ForeignKey, SmallInteger, Integer, Enum
 from sqlalchemy.orm import registry, relationship
 
+from app.core.models.enums import SpellCharacteristic
 from app.repository.db.prettify import Prettify
 
 
@@ -20,6 +21,9 @@ class GameClass(Base, Prettify):
     title = Column(String(255), nullable=False)
     choose_subclass_level = Column(SmallInteger)
     type = Column(String(32), nullable=False)  # full, half etc., todo связь с GameClassType
+    spell_char = Column(
+        Enum(SpellCharacteristic, name='spell_char'), nullable=False
+    )
 
     subclasses = relationship('GameSubclass', back_populates='game_class')
     caster_class = relationship('CasterClass', back_populates='game_class')

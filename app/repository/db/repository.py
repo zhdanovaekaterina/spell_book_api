@@ -8,6 +8,7 @@ from sqlalchemy.sql.expression import func
 
 from app.core.base.core_exception import NotFoundException
 from app.core.models.caster import Caster as CoreCaster
+from app.core.models.enums import SpellCharacteristic
 from app.core.models.ids import CasterId
 from app.core.models.spell import SpellAggregate as CoreSpellAggregate, Spell as CoreSpell
 from app.core.models.game_class import ParamsToGetSpellsAvailable
@@ -161,6 +162,7 @@ class DbRepository(RepositoryInterface):
         class_data = {
             'alias': data.alias,
             'choose_subclass_level': data.choose_subclass_level,
+            'spell_char': SpellCharacteristic[data.spell_char.name],
             'subclasses': []
         }
 

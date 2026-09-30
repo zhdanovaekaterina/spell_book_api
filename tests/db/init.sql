@@ -12,10 +12,10 @@ INSERT INTO d_game_class_type (alias,class_level,cell_level,cell_add_amount) VAL
 	 ('half',9,3,2),
 	 ('half',10,1,2),
 	 ('half',10,2,1);
-INSERT INTO d_class (alias,title,choose_subclass_level,"type") VALUES
-	 ('wizard','Волшебник',2,'full'),
-	 ('cleric','Жрец',1,'full'),
-	 ('ranger','Следопыт',3,'half');
+INSERT INTO d_class (alias,title,choose_subclass_level,"type",spell_char) VALUES
+	 ('wizard','Волшебник',2,'full','INT'),
+	 ('cleric','Жрец',1,'full','WIS'),
+	 ('ranger','Следопыт',3,'half','WIS');
 INSERT INTO d_subclass (class_alias,alias,title) VALUES
 	 ('wizard','transmutation','школа преобразования'),
 	 ('wizard','evocation','школа воплощения'),

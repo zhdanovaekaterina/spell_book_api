@@ -2,6 +2,7 @@ from typing import List
 
 from app.core import NotFoundException
 from app.core.models.const import MAX_CASTER_LEVEL
+from app.core.models.enums import SpellCharacteristic
 from app.core.models.spell import Spell, SpellAggregate
 from app.core.models.cell import CellAggregate
 from app.core.models.game_class import ParamsToGetSpellsAvailable
@@ -35,17 +36,20 @@ class MockRepository(RepositoryInterface):
             GameClassInfo(**{
                 'alias': 'wizard',
                 'subclasses': ['transmutation', 'evocation'],
-                'choose_subclass_level': 2
+                'choose_subclass_level': 2,
+                'spell_char': SpellCharacteristic.INT
             }),
             GameClassInfo(**{
                 'alias': 'cleric',
                 'subclasses': ['life', 'peace', 'light'],
-                'choose_subclass_level': 1
+                'choose_subclass_level': 1,
+                'spell_char': SpellCharacteristic.WIS
             }),
             GameClassInfo(**{
                 'alias': 'ranger',
                 'subclasses': [],
-                'choose_subclass_level': 3
+                'choose_subclass_level': 3,
+                'spell_char': SpellCharacteristic.WIS
             })
         ]
 
@@ -55,19 +59,22 @@ class MockRepository(RepositoryInterface):
             return GameClassInfo(**{
                 'alias': 'wizard',
                 'subclasses': ['transmutation', 'evocation'],
-                'choose_subclass_level': 2
+                'choose_subclass_level': 2,
+                'spell_char': SpellCharacteristic.INT
             })
         elif alias == 'cleric':
             return GameClassInfo(**{
                 'alias': 'cleric',
                 'subclasses': ['life', 'peace', 'light'],
-                'choose_subclass_level': 1
+                'choose_subclass_level': 1,
+                'spell_char': SpellCharacteristic.WIS
             })
         elif alias == 'ranger':
             return GameClassInfo(**{
                 'alias': 'ranger',
                 'subclasses': [],
-                'choose_subclass_level': 3
+                'choose_subclass_level': 3,
+                'spell_char': SpellCharacteristic.WIS
             })
         else:
             raise KeyError()

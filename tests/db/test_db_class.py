@@ -7,6 +7,7 @@
 import pytest
 
 from app.core.interfaces.dto import GameClassInfo
+from app.core.models.enums import SpellCharacteristic
 from tests.db.params import game_class_result
 
 
@@ -20,6 +21,7 @@ def test_one_class(mock_db):
     assert one_class.alias == first_class.get('alias')
     assert (one_class.choose_subclass_level
             == first_class.get('choose_subclass_level'))
+    assert one_class.spell_char == SpellCharacteristic[first_class.get('spell_char')]
     assert len(one_class.subclasses) == len(first_class.get('subclasses'))
 
 

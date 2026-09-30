@@ -4,6 +4,7 @@ from pydantic import ValidationError
 
 from app.core.base.exc_type import CoreExcType
 from app.core.models.game_class import GameClass
+from app.core.models.enums import SpellCharacteristic
 
 
 params_class_valid = [
@@ -27,6 +28,11 @@ def test_create_valid(di, data):
     game_class = GameClass(**data)
     assert game_class.alias == data.get('alias')
     assert game_class.subclass == data.get('subclass')
+    expected_ability = {
+        'wizard': SpellCharacteristic.INT,
+        'cleric': SpellCharacteristic.WIS,
+    }
+    assert game_class.spell_char == expected_ability[game_class.alias]
 
     if not data.get('level'):
         assert game_class.level == 1
@@ -110,3 +116,9 @@ def test_create_excess(di):
 
     game_class = GameClass(**data)
     assert game_class.subclass is None
+
+
+def test_spell_char_is_loaded_from_repository(di):
+    game_class = GameClass(alias='cleric', subclass='life', spell_char='charisma')
+
+    assert game_class.spell_char == SpellCharacteristic.WIS

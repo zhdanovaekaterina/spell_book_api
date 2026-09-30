@@ -5,6 +5,7 @@ from pydantic_core import PydanticCustomError
 from dependency_injector.wiring import inject, Provide
 
 from app.core.models.const import MIN_CASTER_LEVEL, MAX_CASTER_LEVEL
+from app.core.models.enums import SpellCharacteristic
 from app.core.base.exc_type import CoreExcType
 from app.core.interfaces.repository import RepositoryInterface
 
@@ -17,6 +18,7 @@ class GameClass(BaseModel):
     alias: str
     level: int = Field(default=MIN_CASTER_LEVEL, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
     subclass: Optional[str] = None
+    spell_char: SpellCharacteristic = SpellCharacteristic.INT  # тут не должно быть значения по умолчанию, это для валидации
 
     @model_validator(mode='after')
     @inject
@@ -33,6 +35,8 @@ class GameClass(BaseModel):
                 "invalid class '{class}' provided",
                 {'class': self.alias}
             )
+
+        self.spell_char = game_class.spell_char
 
         # Проверяем необходимость наличия подкласса
         if self.level < game_class.choose_subclass_level:  # не должно быть
@@ -83,6 +87,8 @@ class ParamsToGetSpellsAvailable(GameClass):
                 "invalid class '{class}' provided",
                 {'class': self.alias}
             )
+
+        self.spell_char = game_class.spell_char
 
         # Проверяем необходимость наличия подкласса
         if self.level < game_class.choose_subclass_level:  # не должно быть
