@@ -61,6 +61,24 @@ class GameClass(BaseModel):
 
             return self
 
+    def get_spells_count(self,
+                         spell_char_value: int,
+                         repo: RepositoryInterface = Provide['repository']
+                         ) -> dict:
+        """
+        Получаем количество доступных заклинаний для класса на уровне
+        :param spell_char_value: значение характеристики заклинателя
+        :return: словарь с количеством доступных заклинаний
+        """
+
+        response = {}
+
+        return repo.get_spells_count(
+            alias=self.alias,
+            level=self.level,
+            spell_char_value=spell_char_value
+        )
+
 
 class ParamsToGetSpellsAvailable(GameClass):
     """
@@ -118,6 +136,36 @@ class ParamsToGetCellsAvailable(GameClass):
     # когда получаем ячейки, ожидаем уровень как обязательный параметр
     level: int
     # todo: возможно тут стоит удалить атрибут subclass, но тогда поломается логика наследования, поэтому пусть будет None
+
+    @model_validator(mode='after')
+    @inject
+    def valid_model(self,
+                    repo: RepositoryInterface = Provide['repository']
+                    ) -> BaseModel:
+
+        # Проверяем валидно введенный класс - пробуем получить его из базы
+        try:
+            repo.get_one_class(self.alias)
+
+        except KeyError:
+            raise PydanticCustomError(
+                CoreExcType.INVALID_CLASS.value,
+                "invalid class '{class}' provided",
+                {'class': self.alias}
+            )
+        
+        # здесь подкласс вообще не передается, поэтому дальше ничего не проверяем
+        
+        return self
+
+
+class ParamsToGetSpellCount(GameClass):
+    """
+    Параметры для получения количества доступных заклинаний
+    """
+
+    # когда получаем заклинания, по умолчанию берем максимально возможный уровень
+    level: int = Field(default=MAX_CASTER_LEVEL, ge=MIN_CASTER_LEVEL, le=MAX_CASTER_LEVEL)
 
     @model_validator(mode='after')
     @inject

@@ -5,7 +5,7 @@ from app.core.models.const import MAX_CASTER_LEVEL
 from app.core.models.enums import SpellCharacteristic
 from app.core.models.spell import Spell, SpellAggregate
 from app.core.models.cell import CellAggregate
-from app.core.models.game_class import ParamsToGetSpellsAvailable
+from app.core.models.game_class import GameClass, ParamsToGetSpellsAvailable
 from app.core.models.ids import CasterId
 from app.core.interfaces.repository import RepositoryInterface
 from app.core.interfaces.dto import GameClassInfo
@@ -20,6 +20,40 @@ class MockRepository(RepositoryInterface):
     # эмуляция таблицы 'caster'
     caster = []
 
+    # эмуляция таблицы 'game_class'
+    game_class = {
+        'wizard': GameClassInfo(**{
+            'alias': 'wizard',
+            'subclasses': ['transmutation', 'evocation'],
+            'choose_subclass_level': 2,
+            'spell_char': SpellCharacteristic.INT
+        }),
+        'cleric': GameClassInfo(**{
+            'alias': 'cleric',
+            'subclasses': ['life', 'peace', 'light'],
+            'choose_subclass_level': 1,
+            'spell_char': SpellCharacteristic.WIS
+        }),
+        'ranger': GameClassInfo(**{
+            'alias': 'ranger',
+            'subclasses': [],
+            'choose_subclass_level': 3,
+            'spell_char': SpellCharacteristic.WIS
+        }),
+        'bard': GameClassInfo(**{
+            'alias': 'bard',
+            'subclasses': [],
+            'choose_subclass_level': 3,
+            'spell_char': SpellCharacteristic.CHA
+        }),
+        'artificier': GameClassInfo(**{
+            'alias': 'artificier',
+            'subclasses': [],
+            'choose_subclass_level': 2,
+            'spell_char': SpellCharacteristic.INT
+        })
+    }
+
     # эмуляция связей данных классов и заклинаний
     spell_to_class = {}
 
@@ -31,53 +65,10 @@ class MockRepository(RepositoryInterface):
             self.spell_to_class[key] = [Spell(**p) for p in param[1]]
 
     def get_all_classes(self) -> List[GameClassInfo]:
-
-        return [
-            GameClassInfo(**{
-                'alias': 'wizard',
-                'subclasses': ['transmutation', 'evocation'],
-                'choose_subclass_level': 2,
-                'spell_char': SpellCharacteristic.INT
-            }),
-            GameClassInfo(**{
-                'alias': 'cleric',
-                'subclasses': ['life', 'peace', 'light'],
-                'choose_subclass_level': 1,
-                'spell_char': SpellCharacteristic.WIS
-            }),
-            GameClassInfo(**{
-                'alias': 'ranger',
-                'subclasses': [],
-                'choose_subclass_level': 3,
-                'spell_char': SpellCharacteristic.WIS
-            })
-        ]
+        return list(self.game_class.values())
 
     def get_one_class(self, alias: str) -> GameClassInfo:
-
-        if alias == 'wizard':
-            return GameClassInfo(**{
-                'alias': 'wizard',
-                'subclasses': ['transmutation', 'evocation'],
-                'choose_subclass_level': 2,
-                'spell_char': SpellCharacteristic.INT
-            })
-        elif alias == 'cleric':
-            return GameClassInfo(**{
-                'alias': 'cleric',
-                'subclasses': ['life', 'peace', 'light'],
-                'choose_subclass_level': 1,
-                'spell_char': SpellCharacteristic.WIS
-            })
-        elif alias == 'ranger':
-            return GameClassInfo(**{
-                'alias': 'ranger',
-                'subclasses': [],
-                'choose_subclass_level': 3,
-                'spell_char': SpellCharacteristic.WIS
-            })
-        else:
-            raise KeyError()
+        return self.game_class[alias]
 
     def get_available_spells(self, class_info: ParamsToGetSpellsAvailable) \
             -> SpellAggregate:
@@ -135,6 +126,9 @@ class MockRepository(RepositoryInterface):
                 data[3] += 2
         
         return data
+
+    def get_spells_count(self, alias, level, spell_char_value) -> dict:
+        return {}
 
     @staticmethod
     def _get_key_from_dict(dict_data: dict) -> str:
